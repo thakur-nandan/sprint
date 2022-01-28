@@ -105,7 +105,7 @@ def _run(
         for p in ps:
             p.join()
     else:
-        # for debugging usage
+        # especially for debugging usage
         one_process(
             encode_fn_builder, 
             data_iter,
