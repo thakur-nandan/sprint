@@ -129,3 +129,7 @@ dmypy.json
 .pyre/
 
 runs/
+
+examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-b8
+examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-float
+examples/inference/unicoil-noexp/beir_scifact/datasets

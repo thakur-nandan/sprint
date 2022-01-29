@@ -43,9 +43,6 @@ def one_process(
         batch_ids.append(example['id'])
         batch_texts.append(example['text'])
 
-        if not show_progress_bar:
-            print(begin, end, i, chunk_size, f'split{(i + 1) // chunk_size - 1}.jsonl.gz')
-
         if len(batch_ids) >= batch_size or i == end - 1:
             with torch.no_grad():
                 term_weights_batch = encode_fn(batch_texts)
