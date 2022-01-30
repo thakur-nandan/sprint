@@ -1,1 +1,1 @@
-from .splade import SpladeDocumentEncoder
+from .splade import SpladeDocumentEncoder, SpladeQueryEncoder

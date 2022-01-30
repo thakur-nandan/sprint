@@ -129,7 +129,20 @@ dmypy.json
 .pyre/
 
 runs/
+debug/
 
 examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-b8
 examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-float
 examples/inference/unicoil-noexp/beir_scifact/datasets
+
+examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-2digits
+examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-float
+examples/inference/distilsplade_max/beir_scifact/datasets
+examples/inference/distilsplade_max/beir_scifact/splade
+
+# Will add this example later after full checking
+examples/inference/distilsplade_max/beir_msmarco
+examples/inference/distilsplade_max/beir_msmarco/beir_msmarco-distilsplade_max-2digits
+examples/inference/distilsplade_max/beir_msmarco/beir_msmarco-distilsplade_max-float
+examples/inference/distilsplade_max/beir_msmarco/datasets
+examples/inference/distilsplade_max/beir_msmarco/splade

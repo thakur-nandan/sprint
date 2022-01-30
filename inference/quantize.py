@@ -7,6 +7,7 @@ import tqdm
 from multiprocessing import Process, Value
 import math
 import numpy as np
+import crash_ipdb
 
 
 def one_process(
@@ -70,11 +71,16 @@ def run(
     if not check_range_only:
         assert type(output_dir) is str
         quantize_fn = build_quantize_fn(method, original_score_range, quantization_nbits, ndigits)
+        print(f'Using quantization method: {method}')
 
     fpaths = [os.path.join(collection_dir, fname) for fname in os.listdir(collection_dir)]
     nprocs = min(len(fpaths), nprocs)
-    nfpaths_per_proc = math.ceil(len(fpaths) / nprocs)
-    fpaths_divided = [[fpath for fpath in fpaths[b:b+nfpaths_per_proc]] for b in range(0, len(fpaths), nfpaths_per_proc)]
+    nfpaths_per_proc = len(fpaths) // nprocs
+    ranges = [(b, b+nfpaths_per_proc) for b in range(0, len(fpaths), nfpaths_per_proc)]
+    ranges[nprocs-1] = (ranges[nprocs-1][0], ranges[-1][1])  # merge all the leftovers into the last range
+    ranges = ranges[:nprocs]  # keep only nprocs ranges
+    fpaths_divided = [[fpath for fpath in fpaths[b:e]] for (b, e) in ranges]
+    
     return_values = [Value('d') for _ in range(nprocs)]
     processes = [Process(target=one_process, args=(
         fpaths_divided[i],

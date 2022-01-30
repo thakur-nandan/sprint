@@ -31,6 +31,8 @@ def run(original_format, data_dir, output_dir=None):
         beir(data_dir, output_dir)
     else:
         raise NotImplementedError
+    
+    print('Done')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

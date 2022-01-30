@@ -54,6 +54,7 @@ def run(result_path, format, qrels_path, output_dir, k_values=[1,3,5,10,100,1000
     evaluator = EvaluateRetrieval()
     assert len(qrels) == len(results), '#queries should be the same'
     ndcg, _map, recall, precision = evaluator.evaluate(qrels, results, k_values)
+    mrr = EvaluateRetrieval.evaluate_custom(qrels, results, k_values, metric='mrr')
 
     os.makedirs(output_dir, exist_ok=True)
     with open(os.path.join(output_dir, 'metrics.json'), 'w') as f:
@@ -62,6 +63,7 @@ def run(result_path, format, qrels_path, output_dir, k_values=[1,3,5,10,100,1000
             'MAP': _map,
             'Recall': recall,
             'Precision': precision,
+            'mrr': mrr
         }
         json.dump(metrics, f, indent=4)
 

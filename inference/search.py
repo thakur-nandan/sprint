@@ -31,6 +31,17 @@ from pyserini.search.reranker import ClassifierType, PseudoRelevanceClassifierRe
 from typing import List
 import inspect
 
+# class MyImpactSearcher(ImpactSearcher):
+
+#     @staticmethod
+#     def _init_query_encoder_from_str(query_encoder):
+#         if 'splade' in query_encoder.lower():
+#             from .methods import SpladeQueryEncoder
+#             return SpladeQueryEncoder(query_encoder)
+#         else:
+#             return super()._init_query_encoder_from_str(query_encoder)
+
+# ImpactSearcher = MyImpactSearcher
 
 def set_bm25_parameters(searcher, index, k1=None, b=None):
     if k1 is not None or b is not None:

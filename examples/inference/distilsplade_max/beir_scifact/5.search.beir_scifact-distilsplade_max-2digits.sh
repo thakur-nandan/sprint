@@ -27,3 +27,12 @@ nohup python -m inference.$stage \
     --hits 1000 --batch 36 --threads 12 \
     --output-format $output_format \
     > $log_name &
+
+# python -m inference.$stage \
+#     --topics $queries_path \
+#     --encoder $ckpt_name \
+#     --index $index_dir \
+#     --output $output_path \
+#     --impact \
+#     --hits 1000 --batch 36 --threads 12 \
+#     --output-format $output_format
