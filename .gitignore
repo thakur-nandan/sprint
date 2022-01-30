@@ -139,6 +139,7 @@ examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-2
 examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-float
 examples/inference/distilsplade_max/beir_scifact/datasets
 examples/inference/distilsplade_max/beir_scifact/splade
+examples/inference/distilsplade_max/beir_scifact/distilsplade_max
 
 # Will add this example later after full checking
 examples/inference/distilsplade_max/beir_msmarco
@@ -146,3 +147,4 @@ examples/inference/distilsplade_max/beir_msmarco/beir_msmarco-distilsplade_max-2
 examples/inference/distilsplade_max/beir_msmarco/beir_msmarco-distilsplade_max-float
 examples/inference/distilsplade_max/beir_msmarco/datasets
 examples/inference/distilsplade_max/beir_msmarco/splade
+examples/inference/distilsplade_max/beir_msmarco/distilsplade_max
