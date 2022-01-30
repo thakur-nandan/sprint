@@ -22,7 +22,14 @@ One can directly go to the example for evaluating uniCOIL (w/o document expansio
 
 NOTICE: Please change the `$SPARSE_RETRIEVAL_HOME` in the scripts into your local path to the repo, if needed.
 
-It currently only supports uniCOIL and BeIR datasets (with automatically downloading). Other models and data (formats) will be added.
+Currently it supports methods:
+- uniCOIL
+- SPLADE: Go to [examples/inference/distilsplade_max/beir_scifact](examples/inference/distilsplade_max/beir_scifact) for fast reproducing `distilsplade_max` on SciFact;
+
+Currently it supports data (by downloading automatically):
+- BeIR
+
+Other models and data (formats) will be added.
 
 ## Training
 Will be added.
