@@ -3,16 +3,15 @@ export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
 
 export stage=quantize  # Actually it is also OK to escape quantization (i.e. quantize the document term weights into integers)
 
-export encoder_name='unicoil'
-export encoder_ckpt_name='unicoil_noexp'
-export data_name='beir_scifact'
+export encoder_name='splade'
+export encoder_ckpt_name='distilsplade_max'  # Here we use noexp model (i.e. no document expansion), since the documents are not expanded
+export data_name='beir_scifact'  # beir data can be downloaded automatically
 export quantization_from='float'
-export quantization_to='b8'  # Now the quantization stage will quantize the term weights into integers
+export quantization_to='2digits'  # Now the quantization stage will quantize the term weights into integers
 
 # These two are the parameters of the quantization. Refer to the code for more details:
-export quantization_method='range-nbits'
-export original_score_range=5  # The original term weights should not be larger than this
-export quantization_nbits=8  # How many bits used to do quantization
+export quantization_method='ndigits-round'
+export ndigits=2
 
 export long_idenitifer_from=$data_name-$encoder_ckpt_name-$quantization_from
 export long_idenitifer_to=$data_name-$encoder_ckpt_name-$quantization_to
@@ -26,6 +25,5 @@ nohup python -m inference.$stage \
     --collection_dir $collection_dir \
     --output_dir $output_dir \
     --method $quantization_method \
-    --original_score_range $original_score_range \
-    --quantization_nbits $quantization_nbits \
+    --ndigits $ndigits \
     --nprocs 12 > $log_name &

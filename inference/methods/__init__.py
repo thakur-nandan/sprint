@@ -1,0 +1,1 @@
+from .splade import SpladeDocumentEncoder

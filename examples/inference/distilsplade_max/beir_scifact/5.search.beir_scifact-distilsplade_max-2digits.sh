@@ -3,12 +3,12 @@ export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
 
 export stage=search  # Adapted from the Pyserini README for reproducing uniCOIL on MSMARCO
 
-export encoder_name='unicoil'
-export encoder_ckpt_name='unicoil_noexp'
-export data_name='beir_scifact'
-export quantization='b8'
+export encoder_name='splade'
+export encoder_ckpt_name='distilsplade_max'  # Here we use noexp model (i.e. no document expansion), since the documents are not expanded
+export data_name='beir_scifact'  # beir data can be downloaded automatically
+export quantization=2digits  # The current encoding stage will output the original float weights without quantization
 
-export ckpt_name='castorini/unicoil-noexp-msmarco-passage'
+export ckpt_name=splade/weights/distilsplade_max
 export long_idenitifer="$data_name-$encoder_ckpt_name-$quantization"
 export log_name=$stage.$long_idenitifer.log
 export index_dir=$long_idenitifer/index

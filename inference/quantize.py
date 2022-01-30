@@ -2,9 +2,9 @@ import argparse
 import os
 import gzip
 import json
-from typing import List
+from typing import List, Callable
 import tqdm
-from multiprocessing import Process, Manager, Value
+from multiprocessing import Process, Value
 import math
 import numpy as np
 
@@ -12,14 +12,12 @@ import numpy as np
 def one_process(
     fpaths: List[str],
     output_dir: str,
-    original_score_range: float,
-    quantization_nbits: int,
     check_range_only: bool,
+    quantize: Callable[[float,], int],
     return_value: Value,
     show_progress_bar: bool
 ):
     max_value = 0
-    quantize = lambda w: int(np.ceil(w/original_score_range * (2**quantization_nbits)))
     for fpath in tqdm.tqdm(fpaths, disable=not show_progress_bar):
         fout = None
         if not check_range_only:
@@ -44,18 +42,34 @@ def one_process(
 
     return_value.value = max_value
 
+def build_quantize_fn(method, original_score_range, quantization_nbits, ndigits):
+    if method == 'range-nbits':
+        assert type(original_score_range) in [float, int] and original_score_range != 0
+        assert type(quantization_nbits) is int and quantization_nbits > 0
+        quantize_fn = lambda w: int(np.ceil(w/original_score_range * (2**quantization_nbits)))
+    elif method == 'ndigits-round':
+        assert type(ndigits) is int and ndigits > 0
+        factor = 10 ** ndigits
+        quantize_fn = lambda w: round(w * factor)
+    else:
+        raise NotImplementedError
+    
+    return quantize_fn
+
 def run(
     collection_dir: str,
     output_dir: str,
+    method: str,
     original_score_range: float,
     quantization_nbits: int,
+    ndigits: int,
     check_range_only: bool,
     nprocs: int
 ):
+    quantize_fn = None
     if not check_range_only:
         assert type(output_dir) is str
-        assert type(original_score_range) in [float, int]
-        assert type(quantization_nbits) is int
+        quantize_fn = build_quantize_fn(method, original_score_range, quantization_nbits, ndigits)
 
     fpaths = [os.path.join(collection_dir, fname) for fname in os.listdir(collection_dir)]
     nprocs = min(len(fpaths), nprocs)
@@ -65,9 +79,8 @@ def run(
     processes = [Process(target=one_process, args=(
         fpaths_divided[i],
         output_dir,
-        original_score_range,
-        quantization_nbits,
         check_range_only,
+        quantize_fn,
         return_values[i],
         i == 0
     )) for i in range(nprocs)]    
@@ -83,8 +96,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--collection_dir')
     parser.add_argument('--output_dir', required=False)
+    parser.add_argument('--method', required=False, choices=['range-nbits', 'ndigits-round'])
+    # for 'range-nbits':
     parser.add_argument('--original_score_range', type=float, default=5)
     parser.add_argument('--quantization_nbits', type=int, default=8)
+    # for 'ndigits-round':
+    parser.add_argument('--ndigits', type=int, default=2, help='2 means *100')
     parser.add_argument('--check_range_only', action='store_true')
     parser.add_argument('--nprocs', type=int)
     args = parser.parse_args()

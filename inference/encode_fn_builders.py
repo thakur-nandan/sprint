@@ -1,5 +1,7 @@
-from pyserini.encode import UniCoilQueryEncoder, UniCoilDocumentEncoder
+from pyserini.encode import UniCoilQueryEncoder, UniCoilDocumentEncoder, SpladeQueryEncoder
+from .methods import SpladeDocumentEncoder
 from functools import partial
+
 
 def unicoil(ckpt_name, gpu):
     document_encoder = UniCoilDocumentEncoder(ckpt_name, device=gpu)
@@ -9,9 +11,22 @@ def unicoil(ckpt_name, gpu):
 
     return encoder_fn
 
+def splade(ckpt_name, gpu):
+    print('WARNING: Since the online checkpoints are only avaible at https://github.com/naver/splade/raw/main/weights/splade_max,'
+        'please download them and use a local path for `ckpt_name`')
+    document_encoder = SpladeDocumentEncoder(ckpt_name, device=gpu)
+
+    def encoder_fn(texts):
+        return document_encoder.encode(texts)
+    
+    return encoder_fn
+
+
 def build(encoder_name, ckpt_name):
     if encoder_name == 'unicoil':
         return partial(unicoil, ckpt_name)
+    elif encoder_name == 'splade':
+        return partial(splade, ckpt_name)
     else:
         raise NotImplementedError
 
