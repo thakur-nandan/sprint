@@ -31,7 +31,7 @@ def load_results(result_path, format) -> Dict[str, Dict[str, float]]:
     
     return results
 
-def load_qrels(qrels_path):
+def load_qrels(qrels_path) -> Dict[str, Dict[str, float]]:
     # adapted from BeIR: 
     # https://github.com/UKPLab/beir/blob/568f4c34fa0be1901e2aaa8479978c9e54a1e377/beir/datasets/data_loader.py#L114
     reader = csv.reader(open(qrels_path, encoding="utf-8"), delimiter="\t", quoting=csv.QUOTE_MINIMAL)

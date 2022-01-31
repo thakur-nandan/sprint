@@ -129,6 +129,7 @@ def run(encoder_name, ckpt_name, data_name, data_dir, gpus, output_dir, batch_si
     encode_fn_builder = encode_fn_builders.build(encoder_name, ckpt_name)
     data_iter = data_iters.build(data_name, data_dir)
     _run(encode_fn_builder, data_iter, gpus, output_dir, batch_size, chunk_size)
+    print('Done')
 
 
 if __name__ == '__main__':
