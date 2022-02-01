@@ -154,3 +154,10 @@ examples/inference/distilsplade_max/beir_msmarco/beir_msmarco-distilsplade_max-f
 examples/inference/distilsplade_max/beir_msmarco/datasets
 examples/inference/distilsplade_max/beir_msmarco/splade
 examples/inference/distilsplade_max/beir_msmarco/distilsplade_max
+
+# Custom added
+examples/**/datasets/
+examples/**/output/
+examples/**/DeepCT/
+examples/**/models/
+examples/**/faiss-index/

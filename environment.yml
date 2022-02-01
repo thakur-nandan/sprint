@@ -215,4 +215,4 @@ dependencies:
     - wrapt==1.13.3
     - xxhash==2.0.2
     - zipp==3.7.0
-prefix: /home/ukp/anaconda3/envs/sparse-retrieval
+prefix: /home/n3thakur/anaconda3/envs/sparse-retrieval
