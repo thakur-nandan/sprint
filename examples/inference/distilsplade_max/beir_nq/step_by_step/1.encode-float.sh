@@ -1,4 +1,4 @@
-export SPARSE_RETRIEVAL_HOME=../../../../  # Path to the repo, please change it accordingly
+export SPARSE_RETRIEVAL_HOME=../../../../../  # Path to the repo, please change it accordingly
 export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
 
 export stage=encode
@@ -15,7 +15,7 @@ export output_dir=$long_idenitifer/collection
 export log_name=$stage.$long_idenitifer.log
 export gpus="9 10 11 12 13 14 15"  # GPU IDs, separated by blank ' '
 
-nohup python -m inference.$stage \
+nohup python -m sparse_retrieval.inference.$stage \
     --encoder_name $encoder_name \
     --ckpt_name  $ckpt_name \
     --data_name $data_name \

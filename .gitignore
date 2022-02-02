@@ -131,29 +131,38 @@ dmypy.json
 runs/
 debug/
 
-examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-b8
-examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-float
+
+examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp
+examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-quantized
 examples/inference/unicoil-noexp/beir_scifact/datasets
+examples/inference/unicoil-noexp/beir_scifact/step_by_step/beir_scifact-unicoil_noexp-b8
+examples/inference/unicoil-noexp/beir_scifact/step_by_step/beir_scifact-unicoil_noexp-float
+examples/inference/unicoil-noexp/beir_scifact/step_by_step/datasets
 
-examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-2digits
-examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-float
+examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max
+examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-quantized
 examples/inference/distilsplade_max/beir_scifact/datasets
-examples/inference/distilsplade_max/beir_scifact/splade
 examples/inference/distilsplade_max/beir_scifact/distilsplade_max
+examples/inference/distilsplade_max/beir_scifact/step_by_step/beir_scifact-distilsplade_max-2digits
+examples/inference/distilsplade_max/beir_scifact/step_by_step/beir_scifact-distilsplade_max-float
+examples/inference/distilsplade_max/beir_scifact/step_by_step/datasets
+examples/inference/distilsplade_max/beir_scifact/step_by_step/distilsplade_max
 
-examples/inference/distilsplade_max/beir_nq/beir_nq-distilsplade_max-2digits
-examples/inference/distilsplade_max/beir_nq/beir_nq-distilsplade_max-float
-examples/inference/distilsplade_max/beir_nq/datasets
-examples/inference/distilsplade_max/beir_nq/splade
+examples/inference/distilsplade_max/beir_nq/beir_nq-distilsplade_max
+examples/inference/distilsplade_max/beir_nq/beir_nq-distilsplade_max-quantized
 examples/inference/distilsplade_max/beir_nq/distilsplade_max
+examples/inference/distilsplade_max/beir_nq/step_by_step/beir_nq-distilsplade_max-2digits
+examples/inference/distilsplade_max/beir_nq/step_by_step/beir_nq-distilsplade_max-float
+examples/inference/distilsplade_max/beir_nq/step_by_step/datasets
+examples/inference/distilsplade_max/beir_nq/step_by_step/distilsplade_max
 
 # Will add this example later after full checking
 examples/inference/distilsplade_max/beir_msmarco
-examples/inference/distilsplade_max/beir_msmarco/beir_msmarco-distilsplade_max-2digits
-examples/inference/distilsplade_max/beir_msmarco/beir_msmarco-distilsplade_max-float
-examples/inference/distilsplade_max/beir_msmarco/datasets
-examples/inference/distilsplade_max/beir_msmarco/splade
-examples/inference/distilsplade_max/beir_msmarco/distilsplade_max
+examples/inference/distilsplade_max/beir_msmarco/step_by_step/beir_msmarco-distilsplade_max-2digits
+examples/inference/distilsplade_max/beir_msmarco/step_by_step/beir_msmarco-distilsplade_max-float
+examples/inference/distilsplade_max/beir_msmarco/step_by_step/datasets
+examples/inference/distilsplade_max/beir_msmarco/step_by_step/splade
+examples/inference/distilsplade_max/beir_msmarco/step_by_step/distilsplade_max
 
 # Custom added
 examples/**/datasets/

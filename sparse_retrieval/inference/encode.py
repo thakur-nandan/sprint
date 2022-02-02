@@ -97,16 +97,19 @@ def _run(
 
     ranges[-1] = (ranges[-1][0], min(ranges[-1][1], nexamples))  # make sure the last range is right, which is important for the criterion of ending point
     if len(gpus) > 1:
-        ps = [mp.Process(target=one_process, args=(
-            encode_fn_builder, 
-            copy.deepcopy(data_iter),
-            gpu,
-            output_dir,
-            data_range,
-            batch_size,
-            chunk_size,
-            gpu == gpus[0]
-        )) for gpu, data_range in zip(gpus, ranges)]
+        ps = [mp.Process(
+                target=one_process, 
+                args=(
+                    encode_fn_builder, 
+                    copy.deepcopy(data_iter),
+                    gpu,
+                    output_dir,
+                    data_range,
+                    batch_size,
+                    chunk_size,
+                    gpu == gpus[0]
+                )
+            ) for gpu, data_range in zip(gpus, ranges)]
         
         for p in ps:
             p.start()

@@ -1,4 +1,4 @@
-export SPARSE_RETRIEVAL_HOME=../../../../  # Path to the repo, please change it accordingly
+export SPARSE_RETRIEVAL_HOME=../../../../../  # Path to the repo, please change it accordingly
 export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
 
 export stage=index  # Adapted from the Pyserini README for reproducing uniCOIL on MSMARCO
@@ -15,7 +15,7 @@ export output_dir=$long_idenitifer/$stage
 
 export log_name=$stage.$long_idenitifer.log
 
-nohup python -m inference.$stage \
+nohup python -m sparse_retrieval.inference.$stage \
     -collection JsonVectorCollection \
     -input $collection_dir \
     -index $output_dir \

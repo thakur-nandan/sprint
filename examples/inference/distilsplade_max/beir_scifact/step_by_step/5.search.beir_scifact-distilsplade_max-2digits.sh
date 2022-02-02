@@ -1,4 +1,4 @@
-export SPARSE_RETRIEVAL_HOME=../../../../  # Path to the repo, please change it accordingly
+export SPARSE_RETRIEVAL_HOME=../../../../../  # Path to the repo, please change it accordingly
 export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
 
 export stage=search  # Adapted from the Pyserini README for reproducing uniCOIL on MSMARCO
@@ -18,7 +18,7 @@ export output_path=$long_idenitifer/$stage/$output_format-format/run.tsv
 export data_dir=datasets/beir/scifact
 export queries_path=$data_dir/queries-test.reformatted.tsv  # This is the input queries
 
-nohup python -m inference.$stage \
+nohup python -m sparse_retrieval.inference.$stage \
     --topics $queries_path \
     --encoder $ckpt_name \
     --index $index_dir \

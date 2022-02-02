@@ -1,9 +1,11 @@
 import argparse
+from functools import partial
 import os
 import gzip
 import json
 from typing import List, Callable
 import tqdm
+import dill
 from multiprocessing import Process, Value
 import math
 import numpy as np
@@ -43,15 +45,21 @@ def one_process(
 
     return_value.value = max_value
 
+def range_nbits(original_score_range, quantization_nbits, w):
+    return int(np.ceil(w/original_score_range * (2**quantization_nbits)))
+
+def ndigits_round(factor, w):
+    return round(w * factor)
+
 def build_quantize_fn(method, original_score_range, quantization_nbits, ndigits):
     if method == 'range-nbits':
         assert type(original_score_range) in [float, int] and original_score_range != 0
         assert type(quantization_nbits) is int and quantization_nbits > 0
-        quantize_fn = lambda w: int(np.ceil(w/original_score_range * (2**quantization_nbits)))
+        quantize_fn = partial(range_nbits, original_score_range, quantization_nbits)
     elif method == 'ndigits-round':
         assert type(ndigits) is int and ndigits > 0
         factor = 10 ** ndigits
-        quantize_fn = lambda w: round(w * factor)
+        quantize_fn = partial(ndigits_round, factor)
     else:
         raise NotImplementedError
     

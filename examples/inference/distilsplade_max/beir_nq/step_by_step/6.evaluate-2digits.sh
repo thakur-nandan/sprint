@@ -1,4 +1,4 @@
-export SPARSE_RETRIEVAL_HOME=../../../../  # Path to the repo, please change it accordingly
+export SPARSE_RETRIEVAL_HOME=../../../../../  # Path to the repo, please change it accordingly
 export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
 
 export stage=evaluate
@@ -22,7 +22,7 @@ export qrels_path=$data_dir/qrels/test.tsv
 export output_dir=$long_idenitifer/evaluation
 export k_values="1 3 5 10 100 1000"  # The cutoff values used in evlauation
 
-python -m inference.$stage \
+python -m sparse_retrieval.inference.$stage \
     --result_path $result_path \
     --format $format \
     --qrels_path $qrels_path \
