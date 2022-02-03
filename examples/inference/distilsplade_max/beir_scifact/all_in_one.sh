@@ -16,7 +16,7 @@ nohup python -m sparse_retrieval.inference.aio \
     --encoder_name splade \
     --ckpt_name distilsplade_max \
     --data_name beir_scifact \
-    --gpus 0 \
+    --gpus 11 12 \
     --output_dir beir_scifact-distilsplade_max \
     --do_quantization \
     --quantization_method ndigits-round \

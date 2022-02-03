@@ -1,4 +1,4 @@
-from typing import Callable, List, Dict, Iterable, Tuple
+from typing import Callable, List, Dict, Iterable, Tuple, Union
 from torch import multiprocessing as mp
 try:
      mp.set_start_method('spawn')  # needed by CUDA + multiprocessing
@@ -14,11 +14,12 @@ import argparse
 import copy
 import crash_ipdb
 from . import data_iters
-from . import encode_fn_builders
+from . import encoder_builders
+from pyserini.encode import QueryEncoder, DocumentEncoder
 
 
 def one_process(
-    encode_fn_builder: Callable[[int], Callable[[List[str],], Dict[str, object]]], 
+    encoder_builder: Callable[[int], Union[QueryEncoder, DocumentEncoder]], 
     data_iter: Iterable,
     gpu: int,
     output_dir: str,
@@ -28,7 +29,7 @@ def one_process(
     show_progress_bar: bool
 ):
     nlines_encoded = 0
-    encode_fn = encode_fn_builder(gpu)
+    encoder = encoder_builder(gpu)
     batch_ids = []
     batch_texts = []
     term_weights_chunk = []
@@ -46,7 +47,7 @@ def one_process(
 
         if len(batch_ids) >= batch_size or len(batch_ids) + len(term_weights_chunk) >= chunk_size or i == end - 1:
             with torch.no_grad():
-                term_weights_batch = encode_fn(batch_texts)
+                term_weights_batch = encoder.encode(batch_texts)
 
             term_weights_batch = [
                 {
@@ -76,7 +77,7 @@ def one_process(
     print(f'Encoded {nlines_encoded} lines. The range is {data_range}')
 
 def _run(
-    encode_fn_builder: Callable[[int], Callable[[List[str],], Dict[str, object]]],
+    encoder_builder: Callable[[int], Union[QueryEncoder, DocumentEncoder]],
     data_iter: Iterable, 
     gpus: List[int], 
     output_dir: str,
@@ -100,7 +101,7 @@ def _run(
         ps = [mp.Process(
                 target=one_process, 
                 args=(
-                    encode_fn_builder, 
+                    encoder_builder, 
                     copy.deepcopy(data_iter),
                     gpu,
                     output_dir,
@@ -118,7 +119,7 @@ def _run(
     else:
         # especially for debugging usage
         one_process(
-            encode_fn_builder, 
+            encoder_builder, 
             data_iter,
             gpus[0],
             output_dir,
@@ -129,9 +130,9 @@ def _run(
         )
 
 def run(encoder_name, ckpt_name, data_name, data_dir, gpus, output_dir, batch_size=64, chunk_size=100000):
-    encode_fn_builder = encode_fn_builders.build(encoder_name, ckpt_name)
+    encoder_builder = encoder_builders.get_builder(encoder_name, ckpt_name, 'document')
     data_iter = data_iters.build(data_name, data_dir)
-    _run(encode_fn_builder, data_iter, gpus, output_dir, batch_size, chunk_size)
+    _run(encoder_builder, data_iter, gpus, output_dir, batch_size, chunk_size)
     print('Done')
 
 
