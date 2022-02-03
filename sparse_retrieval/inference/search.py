@@ -22,26 +22,17 @@ import os
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
+from pyserini.encode import QueryEncoder
 from pyserini.analysis import JDefaultEnglishAnalyzer, JWhiteSpaceAnalyzer
 from pyserini.output_writer import OutputFormat, get_output_writer
 from pyserini.pyclass import autoclass
 from pyserini.query_iterator import get_query_iterator, TopicsFormat
 from pyserini.search import ImpactSearcher, SimpleSearcher, JDisjunctionMaxQueryGenerator
 from pyserini.search.reranker import ClassifierType, PseudoRelevanceClassifierReranker
-from typing import List
+from typing import List, Union
 import inspect
+from . import encoder_builders
 
-# class MyImpactSearcher(ImpactSearcher):
-
-#     @staticmethod
-#     def _init_query_encoder_from_str(query_encoder):
-#         if 'splade' in query_encoder.lower():
-#             from .methods import SpladeQueryEncoder
-#             return SpladeQueryEncoder(query_encoder)
-#         else:
-#             return super()._init_query_encoder_from_str(query_encoder)
-
-# ImpactSearcher = MyImpactSearcher
 
 def set_bm25_parameters(searcher, index, k1=None, b=None):
     if k1 is not None or b is not None:
@@ -92,7 +83,8 @@ def run(
     remove_duplicates: bool = False,
     hits: int = 1000,
     impact: bool = False,
-    encoder: str = None,
+    encoder_name: str = None,
+    ckpt_name: str = None,
     tokenizer: str = None,
     min_idf: int = 0,
     bm25: bool = False,
@@ -127,6 +119,10 @@ def run(
             # create searcher from prebuilt index name
             searcher = SimpleSearcher.from_prebuilt_index(args.index)
     elif args.impact:
+        ######## build query encoder by encoder name and checkpoint name ##########
+        encoder_builder = encoder_builders.get_builder(encoder_name, ckpt_name, 'query')
+        args.encoder = encoder_builder()  # By default this will use CPU
+        ###########################################################################
         if os.path.exists(args.index):
             searcher = ImpactSearcher(args.index, args.encoder, args.min_idf)
         else:
@@ -275,7 +271,9 @@ def define_search_args(parser):
                         help="Path to Lucene index or name of prebuilt index.")
 
     parser.add_argument('--impact', action='store_true', help="Use Impact.")
-    parser.add_argument('--encoder', type=str, default=None, help="encoder name")
+    # parser.add_argument('--encoder', type=str, default=None, help="encoder name")
+    parser.add_argument('--encoder_name', type=str, default=None, help="encoder name")
+    parser.add_argument('--ckpt_name', type=str, default=None, help="encoder ckpt name or path")
     parser.add_argument('--min-idf', type=int, default=0, help="minimum idf")
 
     parser.add_argument('--bm25', action='store_true', default=True, help="Use BM25 (default).")

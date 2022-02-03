@@ -89,7 +89,8 @@ def run(
     if not os.path.exists(output_path_search):
         search.run(
             topics=reformatted_queries_path,
-            encoder=ckpt_name,
+            encoder_name=encoder_name,
+            ckpt_name=ckpt_name,
             index=output_dir_index,
             output=output_path_search,
             impact=True,
