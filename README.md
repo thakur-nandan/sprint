@@ -78,7 +78,7 @@ Currently it supports methods:
 - uniCOIL
 - SPLADE: Go to [examples/inference/distilsplade_max/beir_scifact](examples/inference/distilsplade_max/beir_scifact) for fast reproducing `distilsplade_max` on SciFact;
 
-Currently it supports data (by downloading automatically):
+Currently it supports data formats (by downloading automatically):
 - BeIR
 
 Other models and data (formats) will be added.
