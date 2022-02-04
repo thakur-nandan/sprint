@@ -22,22 +22,28 @@ cd examples/inference/distilsplade_max/beir_scifact
 bash all_in_one.sh
 ```
 This will go over the whole pipeline and give the final evaluation results in `beir_scifact-distilsplade_max-quantized/evaluation/metrics.json`:
-```bash
-cat beir_scifact-distilsplade_max-quantized/evaluation/metrics.json 
-# {
-#     "nDCG": {
-#         "NDCG@1": 0.60333,
-#         "NDCG@3": 0.65969,
-#         "NDCG@5": 0.67204,
-#         "NDCG@10": 0.6925,
-#         "NDCG@100": 0.7202,
-#         "NDCG@1000": 0.72753
-#     },
-#     "MAP": {
-#         "MAP@1": 0.57217,
-#     ...
-# }
-```
+
+<details>
+  <summary>Results: distilsplade_max on BeIR/SciFact</summary>
+  
+  ```bash
+     cat beir_scifact-distilsplade_max-quantized/evaluation/metrics.json 
+     # {
+     #     "nDCG": {
+     #         "NDCG@1": 0.60333,
+     #         "NDCG@3": 0.65969,
+     #         "NDCG@5": 0.67204,
+     #         "NDCG@10": 0.6925,
+     #         "NDCG@100": 0.7202,
+     #         "NDCG@1000": 0.72753
+     #     },
+     #     "MAP": {
+     #         "MAP@1": 0.57217,
+     #     ...
+     # }
+  ```
+</details>
+
 Or if you like run python directly, just run this for evaluating `castorini/unicoil-noexp-msmarco-passage` on `BeIR/SciFact`:
 ```python
 from sparse_retrieval.inference import aio
