@@ -1,2 +1,2 @@
 from .MarginMSELoss import MarginMSELossSplade
-from .MultipleNegativesRankingLoss import MultipleNegativesRankingLossSplade 
+from .MultipleNegativeRankingLoss import MultipleNegativesRankingLossSplade

@@ -1,7 +1,7 @@
 import torch
 from torch import nn, Tensor
 from typing import Iterable, Dict
-from .util import pairwise_dot_score
+from .utils import pairwise_dot_score
 
 class FLOPS:
     """constraint from Minimizing FLOPs to Learn Efficient Sparse Representations
