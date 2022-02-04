@@ -4,7 +4,6 @@ from transformers import AutoTokenizer, AutoModel
 class SPARTA(torch.nn.Module):
     def __init__(self, model_name, device): #SpanBERT/spanbert-base-cased'): #bert-base-uncased    #distilbert-base-uncased #distilroberta-base
         super().__init__()
-        print("Model name:", model_name)
         self.bert_model = AutoModel.from_pretrained(model_name)
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.bert_model.to(device)
