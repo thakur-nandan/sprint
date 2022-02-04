@@ -44,7 +44,7 @@ This will go over the whole pipeline and give the final evaluation results in `b
   ```
 </details>
 
-Or if you like run python directly, just run this for evaluating `castorini/unicoil-noexp-msmarco-passage` on `BeIR/SciFact`:
+Or if you like run python directly, just run the code snippet below for evaluating `castorini/unicoil-noexp-msmarco-passage` on `BeIR/SciFact`:
 ```python
 from sparse_retrieval.inference import aio
 
