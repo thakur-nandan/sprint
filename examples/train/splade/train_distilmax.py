@@ -1,7 +1,7 @@
-from torch.utils.data import DataLoader
-from sentence_transformers import SentenceTransformer, LoggingHandler, util, evaluation, InputExample
-from beir import util, LoggingHandler, losses
+from beir import util, LoggingHandler
 from beir.datasets.data_loader import GenericDataLoader
+from sentence_transformers import SentenceTransformer
+from torch.utils.data import DataLoader
 from sparse_retrieval.train.dataloaders import MSMARCODataset 
 from sparse_retrieval.train import models, losses
 
@@ -12,6 +12,7 @@ import json
 import gzip
 import tqdm
 import argparse
+import pathlib
 
 #### Just some code to print debug information to stdout
 logging.basicConfig(format='%(asctime)s - %(message)s',
@@ -47,6 +48,17 @@ max_seq_length = args.max_seq_length  # Max length for passages. Increasing it i
 num_negs_per_system = args.num_negs_per_system  # We used different systems to mine hard negatives. Number of hard negatives to add from each system
 num_epochs = args.epochs  # Number of epochs we want to train
 
+logging.info("Create new SPLADE (Distilmax) model")
+word_embedding_model = models.MLMTransformer(model_name, max_seq_length=max_seq_length)
+model = SentenceTransformer(modules=[word_embedding_model])
+
+#### Provide model save path
+model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output", "distilSplade-q-{}-d-{}-{}".format(args.lambda_q, args.lambda_d, model_name.replace("/", "-")))
+os.makedirs(model_save_path, exist_ok=True)
+
+#############################
+#### Load MSMARCO (BEIR) ####
+#############################
 
 #### Download msmarco.zip dataset and unzip the dataset
 dataset = "msmarco"
@@ -57,22 +69,10 @@ data_path = util.download_and_unzip(url, out_dir)
 ### Load BEIR MSMARCO training dataset, this will be used for query and corpus for reference.
 corpus, queries, _ = GenericDataLoader(data_path).load(split="train")
 
-
-# Load our embedding model
-logging.info("Create new s model")
-word_embedding_model = models.MLMTransformer(model_name, max_seq_length=max_seq_length)
-model = SentenceTransformer(modules=[word_embedding_model])
-model_save_path = f'output/distilSplade_{args.lambda_q}_{args.lambda_d}_{model_name.replace("/", "-")}-batch_size_{train_batch_size}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
-#### Provide model save path
-model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output", "distilSplade-{}-{}-{}-{}".format(args.lambda_q, args.lambda_d, model_name.replace("/", "-"), dataset))
-os.makedirs(model_save_path, exist_ok=True)
-# Write self to path
-os.makedirs(model_save_path, exist_ok=True)
-
-
 ##################################################
 #### Download MSMARCO Hard Negs Triplets File ####
 ##################################################
+
 triplets_url = "https://sbert.net/datasets/msmarco-hard-negatives.jsonl.gz"
 msmarco_triplets_filepath = os.path.join(data_path, "msmarco-hard-negatives.jsonl.gz")
 if not os.path.isfile(msmarco_triplets_filepath):
@@ -84,7 +84,7 @@ logging.info("Loading MSMARCO hard-negatives...")
 
 train_queries = {}
 with gzip.open(msmarco_triplets_filepath, 'rt', encoding='utf8') as fIn:
-    for line in tqdm(fIn, total=502939):
+    for line in tqdm.tqdm(fIn, total=502939):
         data = json.loads(line)
         
         #Get the positive passage ids
