@@ -16,19 +16,18 @@ def run(
     encoder_name: str,
     ckpt_name: str,
     data_name: str,
-    data_dir: str,
     gpus: List[int],
     output_dir: str,
 
-    # quantize
-    do_quantization: bool,
-    quantization_method: str,
-    original_score_range: float,
-    quantization_nbits: int,
-    ndigits: int,
-
     # reformat_query
     original_query_format: str,
+    
+    # quantize
+    do_quantization: bool,
+    quantization_method: str = None,  # TODO: Merge `quantization_method`` and `do_quantization``
+    original_score_range: float = None,
+    quantization_nbits: int = None,
+    ndigits: int = None,
 
     # search
     topic_split: str = 'test',
@@ -42,6 +41,7 @@ def run(
     batch_size: int = 64,
     chunk_size: int = 100000,
     nprocs: int = 12,
+    data_dir: str = None
 ):
     # 1. Encode the documents into term weights
     # The output will be ${output_dir}/collection

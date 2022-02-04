@@ -9,8 +9,7 @@ if [ ! -d "distilsplade_max" ]; then
     cd ..
 fi
 
-export SPARSE_RETRIEVAL_HOME=../../../../  # Path to the repo, please change it accordingly
-export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
+# Please make sure you have installed the repo
 
 nohup python -m sparse_retrieval.inference.aio \
     --encoder_name splade \

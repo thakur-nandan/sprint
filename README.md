@@ -1,12 +1,18 @@
 # sparse-retrieval
 Train and evaluate all the sparse-retrieval methods in one stop.
 
-## Dependency
+## Dependency and installation
 This repo is backended by Pyserini, which relies on Java. To make all the things eaiser, we recommend to install all the dependencies via `conda`:
 ```bash
 conda env create -f environment.yml  # The Java/JDK dependency will also be installed by running this
 ```
 This will create a conda environment named `sparse-retrieval`. So if you want other names, please change the `name` argument in [environment.yml](environment.yml).
+
+To install this repo, just go into the repo and do:  (This is required to run the examples)
+```
+pip install -e .
+```
+
 
 ## Inference
 ### Quick start

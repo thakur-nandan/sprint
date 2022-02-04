@@ -20,7 +20,8 @@ export queries_path=$data_dir/queries-test.reformatted.tsv  # This is the input 
 
 nohup python -m inference.$stage \
     --topics $queries_path \
-    --encoder $ckpt_name \
+    --encoder_name $encoder_name \
+    --ckpt_name  $ckpt_name \
     --index $index_dir \
     --output $output_path \
     --impact \

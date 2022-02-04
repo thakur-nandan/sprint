@@ -130,7 +130,7 @@ dmypy.json
 
 runs/
 debug/
-
+data/
 
 examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp
 examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-quantized
@@ -155,6 +155,8 @@ examples/inference/distilsplade_max/beir_nq/step_by_step/beir_nq-distilsplade_ma
 examples/inference/distilsplade_max/beir_nq/step_by_step/beir_nq-distilsplade_max-float
 examples/inference/distilsplade_max/beir_nq/step_by_step/datasets
 examples/inference/distilsplade_max/beir_nq/step_by_step/distilsplade_max
+
+examples/inference/distilsplade_max/nq-doc
 
 # Will add this example later after full checking
 examples/inference/distilsplade_max/beir_msmarco

@@ -41,7 +41,7 @@ def beir(dataset, data_dir=None):
 def build(data_name, data_dir):
     data_name = data_name.lower()
     
-    if 'beir/' in data_name or 'beir_' in data_name:
+    if 'beir' in data_name:
         data_name = data_name.replace('beir/', '')
         data_name = data_name.replace('beir_', '')
         return beir(data_name, data_dir)

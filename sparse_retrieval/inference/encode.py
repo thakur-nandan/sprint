@@ -132,6 +132,7 @@ def _run(
 def run(encoder_name, ckpt_name, data_name, data_dir, gpus, output_dir, batch_size=64, chunk_size=100000):
     encoder_builder = encoder_builders.get_builder(encoder_name, ckpt_name, 'document')
     data_iter = data_iters.build(data_name, data_dir)
+    torch.multiprocessing.freeze_support()
     _run(encoder_builder, data_iter, gpus, output_dir, batch_size, chunk_size)
     print('Done')
 
