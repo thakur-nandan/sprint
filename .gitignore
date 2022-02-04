@@ -132,6 +132,11 @@ runs/
 debug/
 data/
 
+examples/inference/custom_encoder/beir_scifact/datasets
+examples/inference/custom_encoder/beir_scifact/distilsplade_max
+examples/inference/custom_encoder/beir_scifact/beir_scifact-distilsplade_max-stopwords
+examples/inference/custom_encoder/beir_scifact/beir_scifact-distilsplade_max-stopwords-quantized
+
 examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp
 examples/inference/unicoil-noexp/beir_scifact/beir_scifact-unicoil_noexp-quantized
 examples/inference/unicoil-noexp/beir_scifact/datasets

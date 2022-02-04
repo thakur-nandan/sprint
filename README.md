@@ -38,7 +38,27 @@ cat beir_scifact-distilsplade_max-quantized/evaluation/metrics.json
 #     ...
 # }
 ```
+Or if you like run python directly, just run this for evaluating `castorini/unicoil-noexp-msmarco-passage` on `BeIR/SciFact`:
+```python
+from sparse_retrieval.inference import aio
 
+
+if __name__ == '__main__':  # aio.run can only be called within __main__
+    aio.run(
+        encoder_name='unicoil',
+        ckpt_name='castorini/unicoil-noexp-msmarco-passage',
+        data_name='beir/scifact',
+        gpus=[0, 1],
+        output_dir='beir_scifact-unicoil_noexp',
+        do_quantization=True,
+        quantization_method='range-nbits',  # So the doc term weights will be quantized by `(term_weights / 5) * (2 ** 8)`
+        original_score_range=5,
+        quantization_nbits=8,
+        original_query_format='beir',
+        topic_split='test'
+    )
+    # You would get "NDCG@10": 0.68563
+```
 ### Step by step
 One can also run the above process in 6 separate steps under the [step_by_step](examples/inference/distilsplade_max/beir_scifact/step_by_step) folder:
 1. [encode](examples/inference/distilsplade_max/beir_scifact/step_by_step/1.encode.beir_scifact-distilsplade_max-float.sh): Encode documents into term weights by multiprocessing on mutliple GPUs;
@@ -56,6 +76,48 @@ Currently it supports data (by downloading automatically):
 - BeIR
 
 Other models and data (formats) will be added.
+
+### Custom encoders
+To add a custom encoder, one can refer to the example [examples/inference/custom_encoder/beir_scifact](examples/inference/custom_encoder/beir_scifact), where `distilsplade_max` is evaluated on `BeIR/SciFact` **with stopwords filtered out**.
+
+In detail, one just needs to define your custom encoder class and write a new encoder builder function:
+```python
+from typing import Dict, List
+from pyserini.encode import QueryEncoder, DocumentEncoder
+
+class CustomQueryEncoder(QueryEncoder):
+
+    def encode(self, text, **kwargs) -> Dict[str, float]:
+        # Just an example:
+        terms = text.split()
+        term_weights = {term: 1 for term in terms}
+        return term_weights  # Dict object, where keys/values are terms/term scores, resp.
+
+class CustomDocumentEncoder(DocumentEncoder):
+
+    def encode(self, texts, **kwargs) -> List[Dict[str, float]]:
+        # Just an example:
+        term_weights_batch = []
+        for text in texts:
+            terms = text.split()
+            term_weights = {term: 1 for term in terms}
+            term_weights_batch.append(term_weights)
+        return term_weights_batch 
+
+def custom_encoder_builder(ckpt_name, etype, device='cpu'):
+    if etype == 'query':
+        return CustomQueryEncoder(ckpt_name, device=device)        
+    elif etype == 'document':
+        return CustomDocumentEncoder(ckpt_name, device=device)
+    else:
+        raise ValueError
+```
+Then register `custom_encoder_builder` with `sparse_retrieval.inference.encoder_builders.register` before usage:
+```python
+from sparse_retrieval.inference.encoder_builders import register
+
+register('custom_encoder_builder', custom_encoder_builder)
+```
 
 ## Training
 Will be added.
