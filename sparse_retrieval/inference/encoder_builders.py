@@ -1,10 +1,11 @@
 from json import encoder
 from pydoc import Doc
+from sparse_retrieval.inference.methods import sparta
 from telnetlib import DO
 from numpy import uint
 from pyserini.encode import UniCoilQueryEncoder, UniCoilDocumentEncoder, SpladeQueryEncoder, QueryEncoder, DocumentEncoder
 from typing import Callable, Union
-from .methods import SpladeDocumentEncoder
+from .methods import SpladeDocumentEncoder, SPARTAQueryEncoder, SPARTADocumentEncoder
 from functools import partial
 
 
@@ -26,9 +27,19 @@ def splade(ckpt_name, etype, device='cpu'):
     else:
         raise ValueError
 
+def sparta(ckpt_name, etype, device='cpu'):
+    if etype == 'query':
+        return SPARTAQueryEncoder(ckpt_name, device=device)        
+    elif etype == 'document':
+        return SPARTADocumentEncoder(ckpt_name, device=device)
+    else:
+        raise ValueError
+
+
 ENCODER_MAPPING = {
     'unicoil': unicoil,
-    'splade': splade
+    'splade': splade,
+    'sparta': sparta
 }
 
 def register(encoder_name, builder_fn: Callable[[str, str, Union[str, int]], Union[QueryEncoder, DocumentEncoder]]):

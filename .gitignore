@@ -144,6 +144,11 @@ examples/inference/unicoil-noexp/beir_scifact/step_by_step/beir_scifact-unicoil_
 examples/inference/unicoil-noexp/beir_scifact/step_by_step/beir_scifact-unicoil_noexp-float
 examples/inference/unicoil-noexp/beir_scifact/step_by_step/datasets
 
+examples/inference/sparta/beir_scifact/beir_scifact-sparta
+examples/inference/sparta/beir_scifact/beir_scifact-sparta-quantized
+examples/inference/sparta/beir_msmarco/beir_msmarco-sparta
+examples/inference/sparta/beir_msmarco/beir_msmarco-sparta-quantized
+
 examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max
 examples/inference/distilsplade_max/beir_scifact/beir_scifact-distilsplade_max-quantized
 examples/inference/distilsplade_max/beir_scifact/datasets
