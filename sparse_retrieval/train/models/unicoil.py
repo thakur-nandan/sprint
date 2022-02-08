@@ -1,23 +1,20 @@
-import torch
-from torch import nn
-import torch.distributed as dist
-
-
-from transformers import PreTrainedModel, TrainingArguments
-from transformers import AutoModel
-from transformers.modeling_outputs import SequenceClassifierOutput, BaseModelOutputWithPooling
+from transformers import AutoModel, PreTrainedModel, TrainingArguments
+from transformers.modeling_outputs import BaseModelOutputWithPooling
 from arguments import ModelArguments, DataArguments
-from torch import Tensor
-from typing import Dict, List, Tuple, Iterable
+
+import torch
+from torch import nn, Tensor
+import torch.distributed as dist
 
 import os
 import logging
+from typing import Dict
 from torch.cuda.amp import autocast
 
 logger = logging.getLogger(__name__)
 
 
-class COIL(nn.Module):
+class UniCOIL(nn.Module):
     def __init__(self, model: PreTrainedModel, model_args: ModelArguments, data_args: DataArguments,
                  train_args: TrainingArguments):
         super().__init__()
@@ -38,7 +35,7 @@ class COIL(nn.Module):
             *args, **kwargs
     ):
         hf_model = AutoModel.from_pretrained(*args, **kwargs)
-        model = COIL(hf_model, model_args, data_args, train_args)
+        model = UniCOIL(hf_model, model_args, data_args, train_args)
         path = args[0]
         if os.path.exists(os.path.join(path, 'model.pt')):
             logger.info('loading extra weights from local files')

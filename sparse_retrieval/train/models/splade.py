@@ -1,17 +1,14 @@
-#FROM Sentence-BERT(https://github.com/UKPLab/sentence-transformers/blob/afee883a17ab039120783fd0cffe09ea979233cf/examples/training/ms_marco/train_bi-encoder_margin-mse.py) with minimal changes.
-#Original License APACHE2
-
 from torch import nn
-from transformers import AutoModel, AutoModelForMaskedLM, AutoTokenizer, AutoConfig
+from transformers import AutoModelForMaskedLM, AutoTokenizer, AutoConfig
 import json
 from typing import List, Dict, Optional, Union, Tuple
 import os
 import torch
 from torch import Tensor
 
-class Splade_Pooling(nn.Module):
+class SPLADEv2(nn.Module):
     def __init__(self, word_embedding_dimension: int):
-        super(Splade_Pooling, self).__init__()
+        super(SPLADEv2, self).__init__()
         self.word_embedding_dimension = word_embedding_dimension
         self.config_keys = ["word_embedding_dimension"]
 
@@ -46,7 +43,7 @@ class Splade_Pooling(nn.Module):
         with open(os.path.join(input_path, 'config.json')) as fIn:
             config = json.load(fIn)
 
-        return Splade_Pooling(**config)
+        return SPLADEv2(**config)
 
 class MLMTransformer(nn.Module):
     """Huggingface AutoModel to generate token embeddings.
