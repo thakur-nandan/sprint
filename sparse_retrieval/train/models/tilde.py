@@ -1,18 +1,14 @@
 import torch
-from transformers import PreTrainedModel, BertConfig, BertModel, BertLMHeadModel, BertTokenizer
-from transformers.trainer import Trainer
-from torch.utils.data import DataLoader
-from typing import Optional
-import os
+from transformers import PreTrainedModel, AutoModel, AutoConfig
 
 class TILDEv2(PreTrainedModel):
-    config_class = BertConfig
+    config_class = AutoConfig
     base_model_prefix = "tildev2"
 
-    def __init__(self, config: BertConfig, train_group_size=8):
+    def __init__(self, config: AutoConfig, train_group_size=8):
         super().__init__(config)
         self.config = config
-        self.bert = BertModel(config)
+        self.model = AutoModel.from_config(config)
         self.tok_proj = torch.nn.Linear(config.hidden_size, 1)
         self.cross_entropy = torch.nn.CrossEntropyLoss(reduction='mean')
         self.train_group_size = train_group_size
@@ -32,12 +28,12 @@ class TILDEv2(PreTrainedModel):
             module.bias.data.zero_()
 
     def init_weights(self):
-        self.bert.init_weights()
+        self.model.init_weights()
         self.tok_proj.apply(self._init_weights)
 
     def encode(self, **features):
         assert all([x in features for x in ['input_ids', 'attention_mask', 'token_type_ids']])
-        model_out = self.bert(**features, return_dict=True)
+        model_out = self.model(**features, return_dict=True)
         reps = self.tok_proj(model_out.last_hidden_state)
         tok_weights = torch.relu(reps)
         return tok_weights
@@ -45,7 +41,7 @@ class TILDEv2(PreTrainedModel):
     def forward(self, qry_in, doc_in):
         qry_input = qry_in
         doc_input = doc_in
-        doc_out = self.bert(**doc_input, return_dict=True)
+        doc_out = self.model(**doc_input, return_dict=True)
         doc_reps = self.tok_proj(doc_out.last_hidden_state)  # D * LD * d
 
 
