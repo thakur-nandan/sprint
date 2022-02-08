@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from typing import Optional
 import os
 
-class TILDE(PreTrainedModel):
+class TILDEv2(PreTrainedModel):
     config_class = BertConfig
     base_model_prefix = "tildev2"
 
