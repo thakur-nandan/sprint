@@ -29,7 +29,7 @@ def run(
     original_score_range: float = None,
     quantization_nbits: int = None,
     ndigits: int = None,
-    min_idf: int = 0,
+    min_idf: int = -1,
 
     # search
     topic_split: str = 'test',
