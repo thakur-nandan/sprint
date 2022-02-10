@@ -86,7 +86,7 @@ def run(
     encoder_name: str = None,
     ckpt_name: str = None,
     tokenizer: str = None,
-    min_idf: int = 0,
+    min_idf: int = -1,
     bm25: bool = False,
     rm3: bool = False,
     qld: bool = False,
@@ -274,7 +274,7 @@ def define_search_args(parser):
     # parser.add_argument('--encoder', type=str, default=None, help="encoder name")
     parser.add_argument('--encoder_name', type=str, default=None, help="encoder name")
     parser.add_argument('--ckpt_name', type=str, default=None, help="encoder ckpt name or path")
-    parser.add_argument('--min-idf', type=int, default=0, help="minimum idf")
+    parser.add_argument('--min-idf', type=int, default=-1, help='Query tokens with IDF <= this value will be ignored. The default value of -1 means it considers all the tokens')
 
     parser.add_argument('--bm25', action='store_true', default=True, help="Use BM25 (default).")
     parser.add_argument('--k1', type=float, help='BM25 k1 parameter.')

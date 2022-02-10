@@ -1,3 +1,4 @@
+from builtins import help
 from typing import List
 
 from numpy import require
@@ -28,6 +29,7 @@ def run(
     original_score_range: float = None,
     quantization_nbits: int = None,
     ndigits: int = None,
+    min_idf: int = 0,
 
     # search
     topic_split: str = 'test',
@@ -97,7 +99,8 @@ def run(
             hits=hits,
             batch_size=batch_size,
             threads=nprocs,
-            output_format=output_format_search
+            output_format=output_format_search,
+            min_idf=min_idf
         )
     else:
         print('Escaped search due to the existing output file(s)')
@@ -122,6 +125,7 @@ if __name__ == '__main__':
     parser.add_argument('--gpus', nargs='+', type=int)
     parser.add_argument('--output_dir')
 
+    parser.add_argument('--min_idf', type=int, default=-1, help='Query tokens with IDF <= this value will be ignored. The default value of -1 means it considers all the tokens')
     parser.add_argument('--do_quantization', action='store_true')
     parser.add_argument('--quantization_method', required=False, choices=['range-nbits', 'ndigits-round'])
     # for 'range-nbits':

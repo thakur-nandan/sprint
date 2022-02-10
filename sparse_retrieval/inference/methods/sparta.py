@@ -1,6 +1,7 @@
 # Adapted from https://github.com/nreimers/beir-sparta/blob/main/SPARTA.py
 # and https://github.com/nreimers/beir-sparta/blob/main/eval_msmarco.py
 
+from collections import defaultdict
 import torch
 from transformers import AutoTokenizer, AutoModel
 from pyserini.encode import QueryEncoder, DocumentEncoder
@@ -19,6 +20,7 @@ class SPARTADocumentEncoder(torch.nn.Module, DocumentEncoder):
         #####
         self.bert_input_emb = self.bert_model.embeddings.word_embeddings(torch.tensor(list(range(0, len(self.tokenizer))), device=device))  # for building term weights
         self.reverse_voc = {v: k for k, v in self.tokenizer.vocab.items()}
+        self.special_token_embedding_to_zero = False  # used during inference
 
     def bert_embeddings(self, input_ids):
         return self.bert_model.embeddings.word_embeddings(input_ids)
@@ -58,7 +60,22 @@ class SPARTADocumentEncoder(torch.nn.Module, DocumentEncoder):
         return self.compute_scores(query_embeddings, passage_embeddings)
     
     ###
+    def _set_special_token_embedding_to_zero(self):
+        if self.bert_model.training == True:
+            return
+
+        if self.special_token_embedding_to_zero:
+            return
+        
+        for special_id in self.tokenizer.all_special_ids:
+            self.bert_input_emb[special_id] = 0 * self.bert_input_emb[special_id]
+        
+        self.special_token_embedding_to_zero = True
+            
+    ###
     def encode(self, texts, **kwargs):
+        self._set_special_token_embedding_to_zero()  # Important for full reproduction (although it seems to have little influence on the performance)
+        
         term_weights_batch = []
         sparse_vec_size = kwargs.setdefault('sparse_vec_size', 2000)  # TODO: Make this into the search.py cli arguments
         assert sparse_vec_size <= len(self.tokenizer)
@@ -90,7 +107,16 @@ class SPARTAQueryEncoder(QueryEncoder):
 
     def __init__(self, model_name_or_path, device='cpu'):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
+        self.reverse_voc = {v: k for k, v in self.tokenizer.vocab.items()}
 
     def encode(self, text, **kwargs):
-         tokens = self.tokenizer.tokenize(text)
-         return dict(zip(tokens, [1] * len(tokens)))    
+        token_ids = self.tokenizer(text, add_special_tokens=False)['input_ids']
+        tokens = [self.reverse_voc[token_id] for token_id in token_ids]
+        term_weights = defaultdict(int)
+        
+        # Important for reproducing the results:
+        # Note that in Pyserini/Anserini, the query term weights are maintained by JHashMap,
+        # which will keep only one term weight for identical terms
+        for token in tokens:
+            term_weights[token] += 1
+        return term_weights

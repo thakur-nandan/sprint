@@ -52,7 +52,13 @@ def run(result_path, format, qrels_path, output_dir, k_values=[1,3,5,10,100,1000
     results = load_results(result_path, format)
     qrels = load_qrels(qrels_path)
     evaluator = EvaluateRetrieval()
-    assert len(qrels) == len(results), '#queries should be the same'
+    if len(qrels) != len(results):
+        missing_queries = set(qrels) - set(results)
+        print(f'WARNING: #queries ({len(qrels)}) != |results| ({len(results)}). Queries - results: {set(qrels) - set(results)}')
+        for qid in missing_queries:
+            results[qid] = {}
+            
+    # assert len(qrels) == len(results), '#queries should be the same'
     ndcg, _map, recall, precision = evaluator.evaluate(qrels, results, k_values)
     mrr = EvaluateRetrieval.evaluate_custom(qrels, results, k_values, metric='mrr')
 

@@ -11,6 +11,7 @@ nohup python -m sparse_retrieval.inference.aio \
     --ndigits 2 \
     --original_query_format beir \
     --topic_split test \
+    --min_idf -1 \
     > all_in_one.log &
 
 # Results:
