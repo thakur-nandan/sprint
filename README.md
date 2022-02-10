@@ -77,6 +77,7 @@ One can also run the above process in 6 separate steps under the [step_by_step](
 Currently it supports methods:
 - uniCOIL
 - SPLADE: Go to [examples/inference/distilsplade_max/beir_scifact](examples/inference/distilsplade_max/beir_scifact) for fast reproducing `distilsplade_max` on SciFact;
+- SPARTA
 
 Currently it supports data formats (by downloading automatically):
 - BeIR
@@ -128,4 +129,8 @@ register('custom_encoder_builder', custom_encoder_builder)
 ## Training
 Will be added.
 
+## Contacts
+The main contributors of this repository are:
 
+- [Nandan Thakur](https://github.com/Nthakur20) (for training)
+- [Kexin Wang](https://github.com/kwang2049) (for inference)
