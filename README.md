@@ -74,10 +74,11 @@ One can also run the above process in 6 separate steps under the [step_by_step](
 5. [search](examples/inference/distilsplade_max/beir_scifact/step_by_step/5.search.beir_scifact-distilsplade_max-2digits.sh): Retrieve the relevant documents (backended by Pyserini);
 6. [evaluate](examples/inference/distilsplade_max/beir_scifact/step_by_step/6.evaluate.beir_scifact-distilsplade_max-2digits.sh): Evaluate the results against a certain labeled data, e.g.the qrels used in BeIR (backended by BeIR)
 
-Currently it supports methods:
-- uniCOIL
+Currently it directly supports methods (with reproduction passed):
+- uniCOIL;
 - SPLADE: Go to [examples/inference/distilsplade_max/beir_scifact](examples/inference/distilsplade_max/beir_scifact) for fast reproducing `distilsplade_max` on SciFact;
-- SPARTA
+- SPARTA;
+- TILDEv2: Go to [examples/inference/tildev2-noexp/trecdl2019](examples/inference/tildev2-noexp/trecdl2019) for fast reproducing `ielab/TILDEv2-noExp` reranking on TREC-DL 2019
 
 Currently it supports data formats (by downloading automatically):
 - BeIR

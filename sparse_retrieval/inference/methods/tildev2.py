@@ -1,5 +1,6 @@
 # Adapted from https://github.com/ielab/TILDE/blob/main/modelingv2.py
 
+from collections import defaultdict
 import numpy as np
 import torch
 from transformers import AutoTokenizer, PreTrainedModel, BertConfig, BertModel, PreTrainedTokenizer
@@ -205,4 +206,7 @@ class TILDEv2QueryEncoder(QueryEncoder):
     def encode(self, text, **kwargs):
         tokens = self.tokenizer.tokenize(text)
         tokens = [token for token in tokens if token not in self.stop_tokens]
-        return dict(zip(tokens, [1] * len(tokens)))    
+        term_weights = defaultdict(int)
+        for token in tokens:
+            term_weights[token] += 1
+        return term_weights
