@@ -114,7 +114,7 @@ def run(
     else:
         print('Escaped evaluation due to the existing output file(s)')
 
-    print('Done!')
+    print(f'{__name__}: Done!')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

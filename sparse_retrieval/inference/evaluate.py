@@ -72,7 +72,7 @@ def run(result_path, format, qrels_path, output_dir, k_values=[1,3,5,10,100,1000
             'mrr': mrr
         }
         json.dump(metrics, f, indent=4)
-
+    print(f'{__name__}: Done')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -103,6 +103,7 @@ def run(
     [p.join() for p in processes] 
 
     max_term_weight = max([v.value for v in return_values])
+    print(f'{__name__}: Done')
     print('Max. term weight:', max_term_weight)
 
 

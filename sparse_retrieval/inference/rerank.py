@@ -107,6 +107,7 @@ def run(
 
     print('Saving results')
     save_results(results_rerank, output_dir, output_format)
+    print(f'{__name__}: Done')
 
 
 if __name__ == '__main__':
