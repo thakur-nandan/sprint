@@ -95,6 +95,10 @@ def run(
     print('Doing re-ranking')
     results_rerank = {}
     for qid, query in tqdm(queries.items()):
+        if qid not in retrieval_results:
+            print(f'WARNING: Query {qid} is not in the retrieval results. Has ignored it')
+            continue
+
         term_weights = query_encoder.encode(query)
         rels = defaultdict(float)
         for token, weight_query in term_weights.items():
