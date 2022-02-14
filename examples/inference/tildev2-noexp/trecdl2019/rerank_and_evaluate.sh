@@ -28,6 +28,7 @@ python -m sparse_retrieval.inference.rerank \
     --output_dir "rerank/trec-format" \
     --device 0 \
     --retrieval_result_path "datasets/tilde-trecdl2010-bm25_top1000/run.trec2019-bm25.res"
+    # --retrieval_result_path "datasets/tilde-trecdl2010-bm25_top1000/TILDEv2_rerank_BM25_top1000_dl2019.txt"
     # --retrieval_result_path "datasets/tilde-trecdl2010-bm25_top1000/bm25-top1000-dl2019-pass.txt"
 
 python -m sparse_retrieval.inference.evaluate \
