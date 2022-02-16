@@ -4,7 +4,15 @@ from telnetlib import DO
 from numpy import uint
 from pyserini.encode import UniCoilQueryEncoder, UniCoilDocumentEncoder, SpladeQueryEncoder, QueryEncoder, DocumentEncoder
 from typing import Callable, Union
-from .methods import SpladeDocumentEncoder, SPARTAQueryEncoder, SPARTADocumentEncoder, TILDEv2QueryEncoder, TILDEv2DocumentEncoder
+from .methods import (
+    SpladeDocumentEncoder, 
+    SPARTAQueryEncoder, 
+    SPARTADocumentEncoder, 
+    TILDEv2QueryEncoder, 
+    TILDEv2DocumentEncoder, 
+    DeepImpactQueryEncoder, 
+    DeepImpactDocumentEncoder
+)
 from functools import partial
 
 
@@ -42,12 +50,21 @@ def tildev2(ckpt_name, etype, device='cpu'):
     else:
         raise ValueError
 
+def deepimpact(ckpt_name, etype, device='cpu'):
+    if etype == 'query':
+        return DeepImpactQueryEncoder(ckpt_name, device=device)        
+    elif etype == 'document':
+        return DeepImpactDocumentEncoder(ckpt_name, device=device)
+    else:
+        raise ValueError
+
 
 ENCODER_MAPPING = {
     'unicoil': unicoil,
     'splade': splade,
     'sparta': sparta,
-    'tildev2': tildev2
+    'tildev2': tildev2,
+    'deepimpact': deepimpact
 }
 
 def register(encoder_name, builder_fn: Callable[[str, str, Union[str, int]], Union[QueryEncoder, DocumentEncoder]]):
