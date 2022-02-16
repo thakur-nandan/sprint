@@ -257,7 +257,7 @@ class DeepImpactDocumentEncoder(DocumentEncoder):
 class DeepImpactQueryEncoder(QueryEncoder):
 
     def __init__(self, model_name_or_path, device='cpu'):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=False)
 
     def encode(self, text, **kwargs):
         query_tokens = list(set(cleanQ(text).strip().split()))  # [:10]
