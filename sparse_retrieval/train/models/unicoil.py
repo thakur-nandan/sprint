@@ -1,6 +1,5 @@
 from transformers import AutoModel, PreTrainedModel, TrainingArguments
 from transformers.modeling_outputs import BaseModelOutputWithPooling
-from arguments import ModelArguments, DataArguments
 
 import torch
 from torch import nn, Tensor
@@ -15,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class UniCOIL(nn.Module):
-    def __init__(self, model: PreTrainedModel, model_args: ModelArguments, data_args: DataArguments,
+    def __init__(self, model: PreTrainedModel, model_args, data_args,
                  train_args: TrainingArguments):
         super().__init__()
         self.model: PreTrainedModel = model
@@ -31,26 +30,35 @@ class UniCOIL(nn.Module):
 
     @classmethod
     def from_pretrained(
-            cls, model_args: ModelArguments, data_args: DataArguments, train_args: TrainingArguments,
+            cls, model_args, data_args, train_args: TrainingArguments,
             *args, **kwargs
     ):
         hf_model = AutoModel.from_pretrained(*args, **kwargs)
         model = UniCOIL(hf_model, model_args, data_args, train_args)
         path = args[0]
-        if os.path.exists(os.path.join(path, 'model.pt')):
+        if os.path.exists(os.path.join(path, 'pytorch_model.bin')):
             logger.info('loading extra weights from local files')
-            model_dict = torch.load(os.path.join(path, 'model.pt'), map_location="cpu")
+            model_dict = torch.load(os.path.join(path, 'pytorch_model.bin'), map_location="cpu")
             load_result = model.load_state_dict(model_dict, strict=False)
         return model
 
     def save_pretrained(self, output_dir: str):
         self.model.save_pretrained(output_dir)
         model_dict = self.state_dict()
-        hf_weight_keys = [k for k in model_dict.keys() if k.startswith('model')]
-        for k in hf_weight_keys:
-            model_dict.pop(k)
-        torch.save(model_dict, os.path.join(output_dir, 'model.pt'))
-        torch.save([self.data_args, self.model_args, self.train_args], os.path.join(output_dir, 'args.pt'))
+        
+        encoder_state = {}
+        for key, value in model_dict.items():
+            if key.startswith('model'):
+                encoder_state[key.replace("model", "coil_encoder.bert")] = value
+            elif key.startswith('tok_proj'):
+                encoder_state["coil_encoder." + key] = value
+        
+        torch.save(encoder_state, os.path.join(output_dir, 'pytorch_model.bin'))
+
+        # for k in hf_weight_keys:
+        #     model_dict.pop(k)
+        # torch.save(model_dict, os.path.join(output_dir, 'model.pt'))
+        # torch.save([self.data_args, self.model_args, self.train_args], os.path.join(output_dir, 'args.pt'))
 
     def encode(self, **features):
         assert all([x in features for x in ['input_ids', 'attention_mask', 'token_type_ids']])
