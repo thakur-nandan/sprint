@@ -77,7 +77,7 @@ def run(original_format, data_dir, output_dir=None):
     else:
         raise NotImplementedError
     
-    print('Done')
+    print(f'{__name__}: Done')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

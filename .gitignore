@@ -128,6 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+*.tar.gz
+
 runs/
 debug/
 data/
@@ -182,6 +184,11 @@ examples/inference/distilsplade_max/beir_msmarco/step_by_step/beir_msmarco-disti
 examples/inference/distilsplade_max/beir_msmarco/step_by_step/datasets
 examples/inference/distilsplade_max/beir_msmarco/step_by_step/splade
 examples/inference/distilsplade_max/beir_msmarco/step_by_step/distilsplade_max
+
+examples/inference/deepimpact-bert-base/msmarco-deepimpact/deepimpact-bert-base
+examples/inference/deepimpact-bert-base/msmarco-deepimpact/deepimpact-bert-base.zip
+examples/inference/deepimpact-bert-base/msmarco-deepimpact/msmarco-deepimpact-deepimpact
+examples/inference/deepimpact-bert-base/msmarco-deepimpact/msmarco-deepimpact-deepimpact-quantized
 
 # Custom added
 examples/**/datasets/

@@ -71,37 +71,50 @@ def run(
     original_score_range: float,
     quantization_nbits: int,
     ndigits: int,
-    check_range_only: bool,
     nprocs: int
 ):
     quantize_fn = None
-    if not check_range_only:
-        assert type(output_dir) is str
-        quantize_fn = build_quantize_fn(method, original_score_range, quantization_nbits, ndigits)
-        print(f'Using quantization method: {method}')
-
-    fpaths = [os.path.join(collection_dir, fname) for fname in os.listdir(collection_dir)]
-    nprocs = min(len(fpaths), nprocs)
-    nfpaths_per_proc = len(fpaths) // nprocs
-    ranges = [(b, b+nfpaths_per_proc) for b in range(0, len(fpaths), nfpaths_per_proc)]
-    ranges[nprocs-1] = (ranges[nprocs-1][0], ranges[-1][1])  # merge all the leftovers into the last range
-    ranges = ranges[:nprocs]  # keep only nprocs ranges
-    fpaths_divided = [[fpath for fpath in fpaths[b:e]] for (b, e) in ranges]
     
-    return_values = [Value('d') for _ in range(nprocs)]
-    processes = [Process(target=one_process, args=(
-        fpaths_divided[i],
-        output_dir,
-        check_range_only,
-        quantize_fn,
-        return_values[i],
-        i == 0
-    )) for i in range(nprocs)]    
+    assert type(output_dir) is str
+    quantize_fn = build_quantize_fn(method, original_score_range, quantization_nbits, ndigits)
+    print(f'Using quantization method: {method}')
 
-    [p.start() for p in processes]
-    [p.join() for p in processes] 
+    if original_score_range == -1 and method == 'range-nbits':
+        passes = [{'check_range_only': True}, {'check_range_only': False}]
+    else:
+        passes = [{'check_range_only': False}]
 
-    max_term_weight = max([v.value for v in return_values])
+    for i, _pass in enumerate(passes):
+        check_range_only = _pass['check_range_only']
+        print(f'Pass {i+1}/{len(passes)} for quantization: check_range_only = {check_range_only}')
+        if i == 1:
+            # Note here we replace `original_score_range` with `max_term_weight``
+            quantize_fn = build_quantize_fn(method, max_term_weight, quantization_nbits, ndigits)
+
+        fpaths = [os.path.join(collection_dir, fname) for fname in os.listdir(collection_dir)]
+        nprocs = min(len(fpaths), nprocs)
+        nfpaths_per_proc = len(fpaths) // nprocs
+        ranges = [(b, b+nfpaths_per_proc) for b in range(0, len(fpaths), nfpaths_per_proc)]
+        ranges[nprocs-1] = (ranges[nprocs-1][0], ranges[-1][1])  # merge all the leftovers into the last range
+        ranges = ranges[:nprocs]  # keep only nprocs ranges
+        fpaths_divided = [[fpath for fpath in fpaths[b:e]] for (b, e) in ranges]
+        
+        return_values = [Value('d') for _ in range(nprocs)]
+        processes = [Process(target=one_process, args=(
+            fpaths_divided[i],
+            output_dir,
+            check_range_only,
+            quantize_fn,
+            return_values[i],
+            i == 0
+        )) for i in range(nprocs)]    
+
+        [p.start() for p in processes]
+        [p.join() for p in processes] 
+
+        max_term_weight = max([v.value for v in return_values])
+
+    print(f'{__name__}: Done')
     print('Max. term weight:', max_term_weight)
 
 
@@ -111,11 +124,10 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', required=False)
     parser.add_argument('--method', required=False, choices=['range-nbits', 'ndigits-round'])
     # for 'range-nbits':
-    parser.add_argument('--original_score_range', type=float, default=5)
+    parser.add_argument('--original_score_range', type=float, default=5, help='if set to -1, the score range will be computated automatically')
     parser.add_argument('--quantization_nbits', type=int, default=8)
     # for 'ndigits-round':
     parser.add_argument('--ndigits', type=int, default=2, help='2 means *100')
-    parser.add_argument('--check_range_only', action='store_true')
     parser.add_argument('--nprocs', type=int)
     args = parser.parse_args()
     run(**vars(args))

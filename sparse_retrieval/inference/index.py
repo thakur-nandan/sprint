@@ -44,7 +44,8 @@ def run(
     
     JIndexCollection = autoclass('io.anserini.index.IndexCollection')
     JIndexCollection.main(args_strings)
-
+    print(f'{__name__}: Done')
+    
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

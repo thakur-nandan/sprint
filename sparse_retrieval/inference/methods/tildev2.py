@@ -3,7 +3,7 @@
 from collections import defaultdict
 import numpy as np
 import torch
-from transformers import AutoTokenizer, PreTrainedModel, BertConfig, BertModel, PreTrainedTokenizer
+from transformers import AutoTokenizer, AutoModel, PreTrainedModel, BertConfig, BertModel, PreTrainedTokenizer
 from transformers.trainer import Trainer
 from torch.utils.data import DataLoader
 from typing import Optional
@@ -64,7 +64,8 @@ class TILDEv2(PreTrainedModel):
     def __init__(self, config: BertConfig, train_group_size=8):
         super().__init__(config)
         self.config = config
-        self.bert = BertModel(config)
+        # self.bert = BertModel(config)
+        self.bert = AutoModel.from_config(config)
         self.tok_proj = torch.nn.Linear(config.hidden_size, 1)
         self.cross_entropy = torch.nn.CrossEntropyLoss(reduction='mean')
         self.train_group_size = train_group_size

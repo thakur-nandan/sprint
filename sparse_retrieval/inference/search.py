@@ -264,7 +264,7 @@ def run(
                 output_writer.write(topic, hits)
 
             results.clear()
-
+    print(f'{__name__}: Done')
 
 def define_search_args(parser):
     parser.add_argument('--index', type=str, metavar='path to index or index name', required=True,

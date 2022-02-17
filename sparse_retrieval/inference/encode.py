@@ -1,3 +1,4 @@
+from multiprocessing import Value
 from typing import Callable, List, Dict, Iterable, Tuple, Union
 from torch import multiprocessing as mp
 try:
@@ -25,6 +26,7 @@ def one_process(
     data_range: Tuple[int, int],
     batch_size: int,
     chunk_size: int,
+    return_value: Value,
     show_progress_bar: bool
 ):
     nlines_encoded = 0
@@ -74,6 +76,7 @@ def one_process(
             batch_texts = []
     
     print(f'Encoded {nlines_encoded} lines. The range is {data_range}')
+    return_value.value = nlines_encoded
 
 def _run(
     encoder_builder: Callable[[int], Union[QueryEncoder, DocumentEncoder]],
@@ -96,6 +99,7 @@ def _run(
     ranges = ranges[:len(gpus)]  # keep only #GPUs ranges
 
     ranges[-1] = (ranges[-1][0], min(ranges[-1][1], nexamples))  # make sure the last range is right, which is important for the criterion of ending point
+    return_values = [Value('d') for _ in range(len(ranges))]
     if len(gpus) > 1:
         ps = [mp.Process(
                 target=one_process, 
@@ -107,9 +111,10 @@ def _run(
                     data_range,
                     batch_size,
                     chunk_size,
+                    return_values[i],
                     gpu == gpus[0]
                 )
-            ) for gpu, data_range in zip(gpus, ranges)]
+            ) for i, (gpu, data_range) in enumerate(zip(gpus, ranges))]
         
         for p in ps:
             p.start()
@@ -125,15 +130,19 @@ def _run(
             (0, len(data_iter)),
             batch_size,
             chunk_size,
+            return_values[0],
             True
         )
+    
+    nlines_encoded = sum([v.value for v in return_values])
+    assert nlines_encoded == nexamples, f'Error: Did not encode all the documents ({nlines_encoded}/{nexamples})!!!'
 
 def run(encoder_name, ckpt_name, data_name, data_dir, gpus, output_dir, batch_size=64, chunk_size=100000):
     encoder_builder = encoder_builders.get_builder(encoder_name, ckpt_name, 'document')
     data_iter = data_iters.build(data_name, data_dir)
     torch.multiprocessing.freeze_support()
     _run(encoder_builder, data_iter, gpus, output_dir, batch_size, chunk_size)
-    print('Done')
+    print(f'{__name__}: Done')
 
 
 if __name__ == '__main__':
