@@ -4,7 +4,6 @@ import json
 import os
 from typing import Dict
 from beir.retrieval.evaluation import EvaluateRetrieval
-import crash_ipdb
 
 
 def load_results(result_path, format) -> Dict[str, Dict[str, float]]:

@@ -12,7 +12,6 @@ import json
 import tqdm
 import argparse
 import copy
-import crash_ipdb
 from . import data_iters
 from . import encoder_builders
 from pyserini.encode import QueryEncoder, DocumentEncoder
