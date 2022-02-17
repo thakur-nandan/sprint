@@ -197,5 +197,6 @@ examples/**/DeepCT/
 examples/**/models/
 examples/**/faiss-index/
 examples/**/cache/
+examples/**/preprocessed/
 results/
 output/
