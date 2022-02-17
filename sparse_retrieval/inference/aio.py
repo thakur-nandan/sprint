@@ -60,10 +60,13 @@ def run(
     if do_quantization:
         output_dir += '-quantized'  # TODO: Change this into a specific name
         output_dir_quantize = os.path.join(output_dir, 'collection')
-    if not os.path.exists(output_dir_quantize):
-        quantize.run(collection_dir, output_dir_quantize, quantization_method, original_score_range, quantization_nbits, ndigits, not do_quantization, nprocs)
+        if not os.path.exists(output_dir_quantize):
+            quantize.run(collection_dir, output_dir_quantize, quantization_method, original_score_range, quantization_nbits, ndigits, nprocs)
+        else:
+            print('Escaped quantization due to the existing output file(s)')
     else:
-        print('Escaped quantization due to the existing output file(s)')
+        print('Escaped quantization due to `do_quantization == False`')
+
     if do_quantization:
         collection_dir = output_dir_quantize
 
