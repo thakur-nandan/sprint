@@ -38,6 +38,10 @@ def beir(data_dir, output_dir=None):
         for line in tqdm.tqdm(fin):
             line_dict = json.loads(line)
             qid = line_dict['_id']
+            if qid not in qid_to_split:
+                print(f'WARNING: qid {qid} not in any of the pre-defined splits!')
+                continue
+            
             target_split = qid_to_split[qid]
 
             if need_mapping_to_int:
