@@ -31,9 +31,12 @@ def one_process(
             for line in f:
                 line_dict = json.loads(line)
                 term_dict = line_dict['vector']
-                max_weight = max(term_dict.values())
-                if max_weight > max_value:
-                    max_value = max_weight
+                if len(term_dict):  # it could be empty!!!
+                    max_weight = max(term_dict.values())
+                    if max_weight > max_value:
+                        max_value = max_weight
+                else:
+                    print(f'WARNING: Come across empty term weights {line_dict}')
 
                 if not check_range_only:
                     line_dict['vector'] = dict(map(lambda x: (x[0], quantize(x[1])), term_dict.items()))
