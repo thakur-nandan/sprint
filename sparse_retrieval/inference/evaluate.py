@@ -79,6 +79,6 @@ if __name__ == '__main__':
     parser.add_argument('--format', choices=['msmarco', 'trec'], help='Format of the retrieval result. The formats are from pyserini.output_writer.py')
     parser.add_argument('--qrels_path', help='Path to the BeIR-format file')
     parser.add_argument('--output_dir')
-    parser.add_argument('--k_values', nargs='+', type=int, default=[1,3,5,10,100,1000])
+    parser.add_argument('--k_values', nargs='+', type=int, default=[1,2,3,5,10,20,100,1000])
     args = parser.parse_args()
     run(**vars(args))

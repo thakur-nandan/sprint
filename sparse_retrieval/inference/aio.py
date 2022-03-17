@@ -37,7 +37,7 @@ def run(
     output_format_search: str = 'trec',
 
     # evaluate
-    k_values: List[int] = [1, 3, 5, 10, 100, 1000],
+    k_values: List[int] = [1,2,3,5,10,20,100,1000],
 
     # default setting
     batch_size: int = 64,
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     parser.add_argument('--hits', type=int, default=1000)
     parser.add_argument('--output_format_search', type=str, default='trec', choices=['msmarco', 'trec'])
 
-    parser.add_argument('--k_values', nargs='+', type=int, default=[1,3,5,10,100,1000])
+    parser.add_argument('--k_values', nargs='+', type=int, default=[1,2,3,5,10,20,100,1000])
 
     parser.add_argument('--batch_size', type=int, default=64)
     parser.add_argument('--chunk_size', type=int, default=100000)
