@@ -189,6 +189,10 @@ examples/inference/deepimpact-bert-base/msmarco-deepimpact/deepimpact-bert-base
 examples/inference/deepimpact-bert-base/msmarco-deepimpact/deepimpact-bert-base.zip
 examples/inference/deepimpact-bert-base/msmarco-deepimpact/msmarco-deepimpact-deepimpact
 examples/inference/deepimpact-bert-base/msmarco-deepimpact/msmarco-deepimpact-deepimpact-quantized
+examples/inference/deepimpact-bert-base/beir_scifact/deepimpact-bert-base
+examples/inference/deepimpact-bert-base/beir_scifact/deepimpact-bert-base.zip
+examples/inference/deepimpact-bert-base/beir_scifact/beir_scifact-deepimpact
+examples/inference/deepimpact-bert-base/beir_scifact/beir_scifact-deepimpact-quantized
 
 # Custom added
 examples/**/datasets/

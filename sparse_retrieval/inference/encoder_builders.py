@@ -2,7 +2,7 @@ from json import encoder
 from pydoc import Doc
 from telnetlib import DO
 from numpy import uint
-from pyserini.encode import UniCoilQueryEncoder, UniCoilDocumentEncoder, SpladeQueryEncoder, QueryEncoder, DocumentEncoder
+from pyserini.encode import SpladeQueryEncoder, QueryEncoder, DocumentEncoder
 from typing import Callable, Union
 from .methods import (
     SpladeDocumentEncoder, 
@@ -11,7 +11,9 @@ from .methods import (
     TILDEv2QueryEncoder, 
     TILDEv2DocumentEncoder, 
     DeepImpactQueryEncoder, 
-    DeepImpactDocumentEncoder
+    DeepImpactDocumentEncoder,
+    UniCoilQueryEncoder,
+    UniCoilDocumentEncoder
 )
 from functools import partial
 

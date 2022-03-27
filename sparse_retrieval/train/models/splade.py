@@ -45,6 +45,47 @@ class SPLADEv2(nn.Module):
 
         return SPLADEv2(**config)
 
+
+class Splade_Pooling(nn.Module):
+    def __init__(self, word_embedding_dimension: int):
+        super(Splade_Pooling, self).__init__()
+        self.word_embedding_dimension = word_embedding_dimension
+        self.config_keys = ["word_embedding_dimension"]
+
+    def __repr__(self):
+        return "Pooling Splade({})"
+
+    def get_pooling_mode_str(self) -> str:
+        return "Splade"
+
+    def forward(self, features: Dict[str, Tensor]):
+        token_embeddings = features['token_embeddings']
+        attention_mask = features['attention_mask']
+
+        ## Pooling strategy
+        output_vectors = []
+        sentence_embedding = torch.max(torch.log(1 + torch.relu(token_embeddings)) * attention_mask.unsqueeze(-1), dim=1).values
+        features.update({'sentence_embedding': sentence_embedding})
+        return features
+
+    def get_sentence_embedding_dimension(self):
+        return self.word_embedding_dimension
+
+    def get_config_dict(self):
+        return {key: self.__dict__[key] for key in self.config_keys}
+
+    def save(self, output_path):
+        with open(os.path.join(output_path, 'config.json'), 'w') as fOut:
+            json.dump(self.get_config_dict(), fOut, indent=2)
+
+    @staticmethod
+    def load(input_path):
+        with open(os.path.join(input_path, 'config.json')) as fIn:
+            config = json.load(fIn)
+
+        return Splade_Pooling(**config)
+
+
 class MLMTransformer(nn.Module):
     """Huggingface AutoModel to generate token embeddings.
     Loads the correct class, e.g. BERT / RoBERTa etc.

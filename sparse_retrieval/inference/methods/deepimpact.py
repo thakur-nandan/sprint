@@ -69,7 +69,8 @@ def cleanQ(s, join=True):
 
 class DeepImpact(PreTrainedModel):
     config_class = AutoConfig
-    base_model_prefix = 'coil_encoder'
+    # base_model_prefix = 'coil_encoder'
+    base_model_prefix = 'deep_impact'
 
     def __init__(self, config, *model_args, **model_kwargs):
         super(DeepImpact, self).__init__(config)

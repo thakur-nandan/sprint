@@ -5,7 +5,7 @@ nohup python -m sparse_retrieval.inference.aio \
     --encoder_name unicoil \
     --ckpt_name castorini/unicoil-noexp-msmarco-passage \
     --data_name beir_scifact \
-    --gpus 6 11 \
+    --gpus 0 \
     --output_dir beir_scifact-unicoil_noexp \
     --do_quantization \
     --quantization_method range-nbits \
