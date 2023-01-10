@@ -3,7 +3,7 @@ import json
 import os
 from typing import Dict, List
 from numpy import sort
-from tqdm.auto import tqdm
+from tqdm.auto_notebook import tqdm
 from . import encoder_builders
 from .evaluate import load_results
 import argparse
