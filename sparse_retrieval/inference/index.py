@@ -19,7 +19,7 @@
 import os
 import argparse
 import inspect
-import pyserini.index._base  # important to import this for starting Java services
+import pyserini.index.lucene._base  # important to import this for starting Java services
 from jnius import autoclass  # this line should go after
 
 

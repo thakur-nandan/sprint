@@ -17,20 +17,20 @@
 #
 
 import argparse
+import inspect
 import os
 
 from tqdm import tqdm
 from transformers import AutoTokenizer
+from typing import List
 
-from pyserini.encode import QueryEncoder
 from pyserini.analysis import JDefaultEnglishAnalyzer, JWhiteSpaceAnalyzer
 from pyserini.output_writer import OutputFormat, get_output_writer
 from pyserini.pyclass import autoclass
 from pyserini.query_iterator import get_query_iterator, TopicsFormat
-from pyserini.search import ImpactSearcher, SimpleSearcher, JDisjunctionMaxQueryGenerator
-from pyserini.search.reranker import ClassifierType, PseudoRelevanceClassifierReranker
-from typing import List, Union
-import inspect
+from pyserini.search import JDisjunctionMaxQueryGenerator
+from pyserini.search.lucene import LuceneImpactSearcher, LuceneSearcher
+from pyserini.search.lucene.reranker import ClassifierType, PseudoRelevanceClassifierReranker
 from . import encoder_builders
 
 
@@ -107,26 +107,25 @@ def run(
     args, _, _, values = inspect.getargvalues(frame)
     args = AttrDict(dict(zip(args, map(lambda arg: values[arg], args))))
 
-    JSimpleSearcher = autoclass('io.anserini.search.SimpleSearcher')
     query_iterator = get_query_iterator(args.topics, TopicsFormat(args.topics_format))
     topics = query_iterator.topics
 
     if not args.impact:
         if os.path.exists(args.index):
             # create searcher from index directory
-            searcher = SimpleSearcher(args.index)
+            searcher = LuceneSearcher(args.index)
         else:
             # create searcher from prebuilt index name
-            searcher = SimpleSearcher.from_prebuilt_index(args.index)
+            searcher = LuceneSearcher.from_prebuilt_index(args.index)
     elif args.impact:
         ######## build query encoder by encoder name and checkpoint name ##########
         encoder_builder = encoder_builders.get_builder(encoder_name, ckpt_name, 'query')
         args.encoder = encoder_builder()  # By default this will use CPU
         ###########################################################################
         if os.path.exists(args.index):
-            searcher = ImpactSearcher(args.index, args.encoder, args.min_idf)
+            searcher = LuceneImpactSearcher(args.index, args.encoder, args.min_idf)
         else:
-            searcher = ImpactSearcher.from_prebuilt_index(args.index, args.encoder, args.min_idf)
+            searcher = LuceneImpactSearcher.from_prebuilt_index(args.index, args.encoder, args.min_idf)
 
     if args.language != 'en':
         searcher.set_language(args.language)
