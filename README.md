@@ -1,5 +1,5 @@
-# sparse-retrieval
-Train and evaluate all the sparse-retrieval methods in one stop.
+# SPRINT
+Evaluate all state-of-the-art neural sparse-retrieval methods in one stop.
 
 ## Dependency and installation
 This repo is backended by Pyserini, which relies on Java. To make all the things eaiser, we recommend to install all the dependencies via `conda`:
