@@ -8,7 +8,7 @@ import torch.nn as nn
 from random import sample, shuffle, randint
 
 from itertools import accumulate
-from transformers import AutoConfig, AutoTokenizer, AutoModel, BertModel, PreTrainedModel, BertTokenizer, BertConfig
+from transformers import AutoConfig, AutoTokenizer, AutoModel, PreTrainedModel
 from pyserini.encode import QueryEncoder, DocumentEncoder
 import re
 
@@ -160,9 +160,6 @@ class DeepImpact(PreTrainedModel):
 
             pre_pairs.append((tokenized, token_idxs))
 
-        if max_seq_length % 10 == 0:
-            print("#>>>   max_seq_length = ", max_seq_length)
-
         for tokenized, token_idxs in pre_pairs:
             pairs.append(self.convert_example(tokenized, max_seq_length))
             X.append(token_idxs)
@@ -210,9 +207,6 @@ class DeepImpact(PreTrainedModel):
         return (mask.type(torch.float32) @ y_score), term_scores #, ordered_terms #, num_exceeding_fifth
 
     def index(self, D, max_seq_length):
-        if max_seq_length % 10 == 0:
-            print("#>>>   max_seq_length = ", max_seq_length)
-
         bsize = len(D)
         offset = 0
         pairs, X = [], []
