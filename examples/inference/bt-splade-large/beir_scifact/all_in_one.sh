@@ -1,0 +1,12 @@
+python -m sparse_retrieval.inference.aio \
+    --encoder_name splade \
+    --ckpt_name naver/efficient-splade-VI-BT-large-query naver/efficient-splade-VI-BT-large-doc \
+    --data_name beir_arguana \
+    --data_dir /store2/scratch/n3thakur/beir-datasets/arguana \
+    --gpus 6 \
+    --output_dir beir_arguana-distilsplade_max \
+    --do_quantization \
+    --quantization_method ndigits-round \
+    --ndigits 2 \
+    --original_query_format beir \
+    --topic_split test
