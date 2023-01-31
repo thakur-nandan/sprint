@@ -15,7 +15,7 @@ import os
 def run(
     # encode
     encoder_name: str,
-    ckpt_name: str,
+    ckpt_name: List[str],
     data_name: str,
     gpus: List[int],
     output_dir: str,
@@ -52,11 +52,17 @@ def run(
     if data_dir:
         train_data_dir, eval_data_dir = data_dir, data_dir
     
+    # Check if the same checkpoint is used for both doc and query
+    if len(ckpt_name) == 1:
+        query_ckpt, doc_ckpt = ckpt_name[0], ckpt_name[0]
+    elif len(ckpt_name) == 2:
+        query_ckpt, doc_ckpt = ckpt_name[0], ckpt_name[1]
+    
     # 1. Encode the documents into term weights
     # The output will be ${output_dir}/collection
     output_dir_encode = os.path.join(output_dir, 'collection')
     if not os.path.exists(output_dir_encode):
-        encode.run(encoder_name, ckpt_name, data_name, train_data_dir, gpus, output_dir_encode, batch_size, chunk_size)
+        encode.run(encoder_name, doc_ckpt, data_name, train_data_dir, gpus, output_dir_encode, batch_size, chunk_size)
     else:
         print('Escaped encoding due to the existing output file(s)')
 
@@ -89,9 +95,9 @@ def run(
     # The output will be under the data directory by default
     if ('beir/' in data_name or 'beir_' in data_name) and eval_data_dir is None:  # TODO: Unify this along with the same snippet within data_iters.py
         eval_data_dir = os.path.join('datasets', data_name.replace('beir_', 'beir/'))
-    reformatted_queries_path = os.path.join(eval_data_dir, f'queries-{topic_split}.reformatted.tsv')
-    if not os.path.exists(reformatted_queries_path):
-        reformat_query.run(original_query_format, eval_data_dir, None)
+    tsv_queries_path = os.path.join(eval_data_dir, f'queries-{topic_split}.tsv')
+    if not os.path.exists(tsv_queries_path):
+        reformat_query.run(original_query_format, eval_data_dir, topic_split, None)
     else:
         print('Escaped reformatting quries due to the existing output file(s)')
 
@@ -100,13 +106,13 @@ def run(
     output_path_search = os.path.join(output_dir, f'{output_format_search}-format/run.tsv')
     if not os.path.exists(output_path_search):
         search.run(
-            topics=reformatted_queries_path,
+            topics=tsv_queries_path,
             encoder_name=encoder_name,
-            ckpt_name=ckpt_name,
+            ckpt_name=query_ckpt,
             index=output_dir_index,
             output=output_path_search,
             impact=True,
-            hits=hits,
+            hits=hits+1,
             batch_size=batch_size,
             threads=nprocs,
             output_format=output_format_search,
@@ -129,7 +135,7 @@ def run(
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--encoder_name')
-    parser.add_argument('--ckpt_name')
+    parser.add_argument('--ckpt_name', nargs='+', type=str, help='Checkpoint name, can be only string or pass query and document checkpoints respectively')
     parser.add_argument('--data_name')
     parser.add_argument('--data_dir', required=False)
     parser.add_argument('--eval_data_dir', required=False)
