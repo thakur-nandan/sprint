@@ -15,16 +15,25 @@ class SpladeQueryEncoder(QueryEncoder):
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name or model_name_or_path)
         self.reverse_voc = {v: k for k, v in self.tokenizer.vocab.items()}
 
-    def encode(self, text, **kwargs):
+    def encode(self, text, expansion=True, **kwargs):
         max_length = 256  # hardcode for now
         inputs = self.tokenizer([text], max_length=max_length, padding='longest',
                                 truncation=True, add_special_tokens=True,
                                 return_tensors='pt').to(self.device)
         input_ids = inputs['input_ids']
         input_attention = inputs['attention_mask']
-        batch_logits = self.model(input_ids)['logits']
-        batch_aggregated_logits, _ = torch.max(torch.log(1 + torch.relu(batch_logits))
-                                               * input_attention.unsqueeze(-1), dim=1)
+        batch_logits = self.model(input_ids=input_ids, attention_mask=input_attention)['logits']
+        token_weights = torch.log(1 + torch.relu(batch_logits)) * input_attention.unsqueeze(-1)
+        
+        if expansion:
+            batch_aggregated_logits, _ = torch.max(token_weights, dim=1)
+        else:
+            input_shape = input_ids.size()
+            token_embs = torch.zero(input_shape[0], input_shape[1], self.model.config.vocab_size,
+                                    device=input_ids.device)
+            token_embs = torch.scatter(token_embs, dim=-1, index=input_ids.unsqueese(-1), src=token_weights)
+            batch_aggregated_logits, _ = torch.max(token_embs, dim=1)
+
         batch_aggregated_logits = batch_aggregated_logits.cpu().detach().numpy()
         return self._output_to_weight_dicts(batch_aggregated_logits)[0]
 
@@ -47,16 +56,25 @@ class SpladeDocumentEncoder(DocumentEncoder):
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name or model_name_or_path)
         self.reverse_voc = {v: k for k, v in self.tokenizer.vocab.items()}
 
-    def encode(self, texts, **kwargs):
+    def encode(self, texts, expansion=True, **kwargs):
         max_length = 256  # hardcode for now
         inputs = self.tokenizer(texts, max_length=max_length, padding='longest',
                                 truncation=True, add_special_tokens=True,
                                 return_tensors='pt').to(self.device)
         input_ids = inputs['input_ids']
         input_attention = inputs['attention_mask']
-        batch_logits = self.model(input_ids=input_ids, attention_mask=input_attention)['logits']  # attention mask here is important!!! (the pyserini version did not use it)
-        batch_aggregated_logits, _ = torch.max(torch.log(1 + torch.relu(batch_logits))
-                                               * input_attention.unsqueeze(-1), dim=1)
+        batch_logits = self.model(input_ids=input_ids, attention_mask=input_attention)['logits']
+        token_weights = torch.log(1 + torch.relu(batch_logits)) * input_attention.unsqueeze(-1)
+
+        if expansion:
+            batch_aggregated_logits, _ = torch.max(token_weights, dim=1)
+        else:
+            input_shape = input_ids.size()
+            token_embs = torch.zero(input_shape[0], input_shape[1], self.model.config.vocab_size,
+                                    device=input_ids.device)
+            token_embs = torch.scatter(token_embs, dim=-1, index=input_ids.unsqueese(-1), src=token_weights)
+            batch_aggregated_logits, _ = torch.max(token_embs, dim=1)
+
         batch_aggregated_logits = batch_aggregated_logits.cpu().detach().numpy()
         return self._output_to_weight_dicts(batch_aggregated_logits)
 
