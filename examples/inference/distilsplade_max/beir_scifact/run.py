@@ -28,7 +28,7 @@ if __name__ == '__main__':  # aio.run can only be called within __main__
 
     aio.run(
         encoder_name='splade',
-        ckpt_name='distilsplade_max',
+        ckpt_name=['distilsplade_max',],
         data_name='beir/scifact',
         gpus=[11, 12],
         output_dir='beir_scifact-distilsplade_max',
