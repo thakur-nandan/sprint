@@ -81,3 +81,4 @@ def bin_and_std(keys: List[float], values: List[float], numpy_bins: List[int]) -
     values = np.array(values)
     bin_stds = [values[digitized == i].std() for i in range(1, len(numpy_bins))]
     return bin_stds
+    
