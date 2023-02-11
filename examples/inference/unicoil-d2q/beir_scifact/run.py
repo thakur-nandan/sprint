@@ -15,7 +15,7 @@ if __name__ == '__main__':  # aio.run can only be called within __main__
 
     aio.run(
         encoder_name='unicoil',
-        ckpt_name=args.model_name_or_path,
+        ckpt_name=[args.model_name_or_path,],
         data_name='beir/{}'.format(args.dataset),
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,

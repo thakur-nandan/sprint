@@ -7,7 +7,7 @@ register('splade_stopwords', splade_stopwords)  # Register your custom encoders 
 if __name__ == '__main__':
     aio.run(
         encoder_name='splade_stopwords',
-        ckpt_name='distilsplade_max',
+        ckpt_name=['distilsplade_max',],
         data_name='beir/scifact',
         gpus=[5, 6],
         output_dir='beir_scifact-distilsplade_max-stopwords',
