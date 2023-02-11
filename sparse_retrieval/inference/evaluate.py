@@ -2,8 +2,10 @@ import argparse
 import csv
 import json
 import os
-from typing import Dict
-from .utils import load_qrels
+from typing import Dict, List
+
+import numpy as np
+from .utils import load_qrels, get_processor_name, get_folder_size, bin_and_average, bin_and_std
 from beir.retrieval.evaluation import EvaluateRetrieval
 
 
@@ -33,7 +35,7 @@ def load_results(result_path, format) -> Dict[str, Dict[str, float]]:
     
     return results
 
-def run(result_path, format, qrels_path, output_dir, k_values=[1,3,5,10,100,1000]):
+def run(result_path, latency_path: str, index_path: str, format, qrels_path, output_dir, bins: int=10, k_values=[1,3,5,10,100,1000]):
     results = load_results(result_path, format)
     qrels = load_qrels(qrels_path)
     evaluator = EvaluateRetrieval()
@@ -47,6 +49,41 @@ def run(result_path, format, qrels_path, output_dir, k_values=[1,3,5,10,100,1000
     ndcg, _map, recall, precision = evaluator.evaluate(qrels, results, k_values)
     mrr = EvaluateRetrieval.evaluate_custom(qrels, results, k_values, metric='mrr')
 
+    # Get latency info:
+    latencies: List[float] = []
+    word_lengths: List[int] = []
+    batch_sizes: List[int] = []
+    with open(latency_path) as f:
+        for line in f:
+            qid, word_length, latency, batch_size = line.strip().split("\t")
+            latencies.append(float(latency))
+            word_lengths.append(int(word_length))
+            batch_sizes.append(int(batch_size))
+    freqs, word_length_bins = np.histogram(word_lengths, bins=bins)
+    binned_latencies_avg = bin_and_average(keys=word_lengths, values=latencies, numpy_bins=word_length_bins)
+    binned_latencies_std = bin_and_std(keys=word_lengths, values=latencies, numpy_bins=word_length_bins)
+    latency_info = {
+        "latency": {
+            "latency_avg": np.mean(latencies),
+            "query_word_length_avg": np.mean(word_lengths),
+            "binned": {
+                "word_length_bins": word_length_bins.tolist(),
+                "freqs": freqs.tolist(),
+                "latencies_avg": binned_latencies_avg,
+                "latencies_std": binned_latencies_std
+            },
+            "batch_size": np.mean(batch_sizes),
+            "processor": get_processor_name()
+        }
+    }
+
+    # Get index info:
+    index_size = get_folder_size(index_path)
+    index_info = {
+        "index_size": index_size
+    }
+
+    # Get evaluation scores and save all results:
     os.makedirs(output_dir, exist_ok=True)
     with open(os.path.join(output_dir, 'metrics.json'), 'w') as f:
         metrics = {
@@ -56,15 +93,20 @@ def run(result_path, format, qrels_path, output_dir, k_values=[1,3,5,10,100,1000
             'Precision': precision,
             'mrr': mrr
         }
+        metrics.update(latency_info)
+        metrics.update(index_info)
         json.dump(metrics, f, indent=4)
     print(f'{__name__}: Done')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--result_path')
+    parser.add_argument('--latency_path')
+    parser.add_argument('--index_path')
     parser.add_argument('--format', choices=['msmarco', 'trec'], help='Format of the retrieval result. The formats are from pyserini.output_writer.py')
     parser.add_argument('--qrels_path', help='Path to the BeIR-format file')
     parser.add_argument('--output_dir')
+    parser.add_argument('--bins', type=int, default=10, help="Binning query latencies wrt. how many word-length bins.")
     parser.add_argument('--k_values', nargs='+', type=int, default=[1,2,3,5,10,20,100,1000])
     args = parser.parse_args()
     run(**vars(args))
