@@ -79,5 +79,5 @@ def bin_and_std(keys: List[float], values: List[float], numpy_bins: List[int]) -
     """Reference: https://stackoverflow.com/a/6163403/16409125."""
     digitized = np.digitize(keys, numpy_bins)
     values = np.array(values)
-    bin_means = [values[digitized == i].std() for i in range(1, len(numpy_bins))]
-    return bin_means
+    bin_stds = [values[digitized == i].std() for i in range(1, len(numpy_bins))]
+    return bin_stds
