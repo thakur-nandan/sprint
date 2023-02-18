@@ -65,6 +65,7 @@ def run(result_path, latency_path: str, index_path: str, format, qrels_path, out
     latency_info = {
         "latency": {
             "latency_avg": np.mean(latencies),
+            "latency_std": np.std(latencies),
             "query_word_length_avg": np.mean(word_lengths),
             "binned": {
                 "word_length_bins": word_length_bins.tolist(),
