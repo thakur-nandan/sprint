@@ -53,10 +53,13 @@ def run(
         train_data_dir, eval_data_dir = data_dir, data_dir
     
     # Check if the same checkpoint is used for both doc and query
-    if len(ckpt_name) == 1:
-        query_ckpt, doc_ckpt = ckpt_name[0], ckpt_name[0]
-    elif len(ckpt_name) == 2:
-        query_ckpt, doc_ckpt = ckpt_name[0], ckpt_name[1]
+    if type(ckpt_name) == str:
+        query_ckpt, doc_ckpt = ckpt_name, ckpt_name
+    elif type(ckpt_name) == list:
+        if len(ckpt_name) == 1:
+            query_ckpt, doc_ckpt = ckpt_name[0], ckpt_name[0]    
+        else:
+            query_ckpt, doc_ckpt = ckpt_name[0], ckpt_name[1]
     
     # 1. Encode the documents into term weights
     # The output will be ${output_dir}/collection
