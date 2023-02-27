@@ -14,10 +14,13 @@ def load_corpus(corpus_path, format) -> Dict[str, str]:
     format = format.lower()
     if format == 'beir':
         with open(corpus_path, 'r') as f:
-            for line in tqdm(f):
-                line_dict = json.loads(line)
-                doc_id = line_dict['_id']
-                text = ' '.join([line_dict['title'], line_dict['text']])
+            for metadata in tqdm(f):
+                line = json.loads(metadata)
+                doc_id = line['_id'] if "_id" in line else line['id']
+                if "text" in line:
+                    text = ' '.join([line['title'], line['text']])
+                else:
+                    text = ' '.join([line['title'], line['contents']])
                 corpus[doc_id] = text
     else:
         raise NotImplementedError
