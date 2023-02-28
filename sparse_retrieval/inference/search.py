@@ -17,12 +17,14 @@
 #
 
 import argparse
+from contextlib import contextmanager
 import inspect
 import os
+import time
 
 from tqdm import tqdm
 from transformers import AutoTokenizer
-from typing import List
+from typing import Dict, List
 
 from pyserini.analysis import JDefaultEnglishAnalyzer, JWhiteSpaceAnalyzer
 from pyserini.output_writer import OutputFormat, get_output_writer
@@ -32,6 +34,8 @@ from pyserini.search import JDisjunctionMaxQueryGenerator
 from pyserini.search.lucene import LuceneImpactSearcher, LuceneSearcher
 from pyserini.search.lucene.reranker import ClassifierType, PseudoRelevanceClassifierReranker
 from . import encoder_builders
+
+from nltk import word_tokenize
 
 
 def set_bm25_parameters(searcher, index, k1=None, b=None):
@@ -69,10 +73,46 @@ class AttrDict(dict):
       self.__dict__ = self
 
 
+class LatencyReporter:
+
+    def __init__(self) -> None:
+        self.qids: List[str] = []
+        self.latencies: List[float] = []
+        self.word_lengths: List[int] = []
+        self.batch_sizes: List[int] = []
+    
+    def record(self, qid: str, text: str, latency: float) -> None:
+        """Record one single query latency (single threaded)."""
+        self.qids.append(qid)
+        self.latencies.append(latency)
+        self.word_lengths.append(len(word_tokenize(text)))
+        self.batch_sizes.append(1)
+    
+    def record_batch(self, qids: List[str], texts: List[str], latency: float) -> None:
+        """Record a batch of queries, where the latency will be averaged."""
+        self.qids.extend(qids)
+        self.latencies.extend([latency / len(qids)] * len(qids))
+        self.word_lengths.extend(map(lambda text: len(word_tokenize(text)), texts))
+        self.batch_sizes.extend([len(qids)] * len(qids))
+    
+    def report(self, output_path: str) -> None:
+        """Report the latency details into the `output_path`."""
+        with open(output_path, "w") as f:
+            for qid, word_length, latency, batch_size in zip(self.qids, self.word_lengths, self.latencies, self.batch_sizes):
+                f.write(f"{qid}\t{word_length}\t{latency}\t{batch_size}\n")
+
+    @staticmethod
+    @contextmanager
+    def timer() -> float:
+        """Timer context manager. Reference: https://stackoverflow.com/a/62956469/16409125"""
+        start = time.perf_counter()
+        yield lambda: time.perf_counter() - start
+
 def run(
     topics: str,
     index: str,
     output: str,
+    output_latency: str,
     topics_format: str = TopicsFormat.DEFAULT.value,
     output_format: str = OutputFormat.TREC.value,
     max_passage: bool = False,
@@ -205,35 +245,42 @@ def run(
                                       max_passage_delimiter=args.max_passage_delimiter,
                                       max_passage_hits=args.max_passage_hits)
 
+    latency_reporter = LatencyReporter()
     with output_writer:
         batch_topics = list()
         batch_topic_ids = list()
-        for index, (topic_id, text) in enumerate(tqdm(query_iterator, total=len(topics.keys()))):
+        for index, (topic_id, text) in enumerate(tqdm(query_iterator, total=len(topics.keys()), desc="Doing search")):
             if (args.tokenizer != None):
                 toks = tokenizer.tokenize(text)
                 text = ' '
                 text = text.join(toks)
             if args.batch_size <= 1 and args.threads <= 1:
                 if args.impact:
-                    hits = searcher.search(text, args.hits, fields=fields)
+                    with LatencyReporter.timer() as timer:
+                        hits = searcher.search(text, args.hits, fields=fields)
                 else:
-                    hits = searcher.search(text, args.hits, query_generator=query_generator, fields=fields)
+                    with LatencyReporter.timer() as timer:
+                        hits = searcher.search(text, args.hits, query_generator=query_generator, fields=fields)
                 results = [(topic_id, hits)]
+                latency_reporter.record(qid=topic_id, text=text, latency=timer())
             else:
                 batch_topic_ids.append(str(topic_id))
                 batch_topics.append(text)
                 if (index + 1) % args.batch_size == 0 or \
                         index == len(topics.keys()) - 1:
                     if args.impact:
-                        results = searcher.batch_search(
-                            batch_topics, batch_topic_ids, args.hits, args.threads, fields=fields
-                        )
+                        with LatencyReporter.timer() as timer:
+                            results = searcher.batch_search(
+                                batch_topics, batch_topic_ids, args.hits, args.threads, fields=fields
+                            )
                     else:
-                        results = searcher.batch_search(
-                            batch_topics, batch_topic_ids, args.hits, args.threads,
-                            query_generator=query_generator, fields=fields
-                        )
+                        with LatencyReporter.timer() as timer:
+                            results = searcher.batch_search(
+                                batch_topics, batch_topic_ids, args.hits, args.threads,
+                                query_generator=query_generator, fields=fields
+                            )
                     results = [(id_, results[id_]) for id_ in batch_topic_ids]
+                    latency_reporter.record_batch(qids=batch_topic_ids, texts=batch_topics, latency=timer())
                     batch_topic_ids.clear()
                     batch_topics.clear()
                 else:
@@ -263,6 +310,7 @@ def run(
                 output_writer.write(topic, hits)
 
             results.clear()
+    latency_reporter.report(args.output_latency)
     print(f'{__name__}: Done')
 
 def define_search_args(parser):
@@ -318,6 +366,8 @@ if __name__ == '__main__':
                         help=f"Format of output. Available: {[x.value for x in list(OutputFormat)]}")
     parser.add_argument('--output', type=str, metavar='path',
                         help="Path to output file.")
+    parser.add_argument('--output-latency', type=str, metavar='path',
+                        help="Path to latency-output file.")
     parser.add_argument('--max-passage',  action='store_true',
                         default=False, help="Select only max passage from document.")
     parser.add_argument('--max-passage-hits', type=int, metavar='num', required=False, default=100,

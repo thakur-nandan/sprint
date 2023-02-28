@@ -37,6 +37,7 @@ def run(
     output_format_search: str = 'trec',
 
     # evaluate
+    bins: int = 10,
     k_values: List[int] = [1,2,3,5,10,20,100,1000],
 
     # default setting
@@ -104,13 +105,15 @@ def run(
     # 5. Search the queries over the index
     # The output will be ${output_dir}-quantized/${output_format_search}-format/run.tsv
     output_path_search = os.path.join(output_dir, f'{output_format_search}-format/run.tsv')
-    if not os.path.exists(output_path_search):
+    output_path_latency = os.path.join(output_dir, f'{output_format_search}-format/latency.tsv')
+    if not all([os.path.exists(output_path_search), os.path.exists(output_path_latency)]):
         search.run(
             topics=tsv_queries_path,
             encoder_name=encoder_name,
             ckpt_name=query_ckpt,
             index=output_dir_index,
             output=output_path_search,
+            output_latency=output_path_latency,
             impact=True,
             hits=hits+1,
             batch_size=batch_size,
@@ -126,7 +129,16 @@ def run(
     qrels_path = os.path.join(eval_data_dir, 'qrels', f'{topic_split}.tsv')
     output_dir_evaluate = os.path.join(output_dir, 'evaluation')
     if not os.path.exists(output_dir_evaluate):
-        evaluate.run(output_path_search, output_format_search, qrels_path, output_dir_evaluate, k_values)
+        evaluate.run(
+            result_path=output_path_search, 
+            latency_path=output_path_latency,
+            index_path=output_dir_index,
+            format=output_format_search,
+            qrels_path=qrels_path,
+            output_dir=output_dir_evaluate, 
+            bins=bins,
+            k_values=k_values
+        )
     else:
         print('Escaped evaluation due to the existing output file(s)')
 
@@ -158,6 +170,7 @@ if __name__ == '__main__':
     parser.add_argument('--hits', type=int, default=1000)
     parser.add_argument('--output_format_search', type=str, default='trec', choices=['msmarco', 'trec'])
 
+    parser.add_argument('--bins', type=int, default=10, help="Binning query latencies wrt. how many word-length bins.")
     parser.add_argument('--k_values', nargs='+', type=int, default=[1,2,3,5,10,20,100,1000])
 
     parser.add_argument('--batch_size', type=int, default=64)
