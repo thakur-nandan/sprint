@@ -14,6 +14,7 @@ def convert_beir_queries(data_dir, topic_split, output_dir=None):
     
     with open(os.path.join(output_dir, f'queries-{topic_split}.tsv'), 'w') as fOut:
         for query_id, query in queries.items():
+            query = query.replace('\t', '')
             line = '\t'.join([str(query_id), query]) + '\n'
             fOut.write(line)
 
