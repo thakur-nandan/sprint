@@ -1,22 +1,22 @@
-if [ ! -d "distilsplade_max" ]; then
-    wget https://download-de.europe.naverlabs.com/Splade_Release_Jan22/distilsplade_max.tar.gz
-    tar -xvf distilsplade_max.tar.gz
-fi
+# if [ ! -d "distilsplade_max" ]; then
+#     wget https://download-de.europe.naverlabs.com/Splade_Release_Jan22/distilsplade_max.tar.gz
+#     tar -xvf distilsplade_max.tar.gz
+# fi
 
 # Please make sure you have installed the repo
 
-nohup python -m sparse_retrieval.inference.aio \
+python -m sparse_retrieval.inference.aio \
     --encoder_name splade \
-    --ckpt_name distilsplade_max \
-    --data_name beir_scifact \
-    --gpus 0 \
-    --output_dir beir_scifact-distilsplade_max \
+    --ckpt_name /home/n3thakur/projects/splade/weights/distilsplade_max \
+    --data_name beir_arguana \
+    --data_dir /store2/scratch/n3thakur/beir-datasets/arguana \
+    --gpus 2 \
+    --output_dir beir_arguana-distilsplade_max \
     --do_quantization \
     --quantization_method ndigits-round \
     --ndigits 2 \
     --original_query_format beir \
-    --topic_split test \
-    > all_in_one.log &
+    --topic_split test
 
 
 # {
