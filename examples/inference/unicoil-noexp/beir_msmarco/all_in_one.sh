@@ -1,7 +1,7 @@
 # Please make sure you have installed the repo
 
 # Notice that it should be MS MARCO dev split
-nohup python -m sparse_retrieval.inference.aio \
+nohup python -m sprint.inference.aio \
     --encoder_name unicoil \
     --ckpt_name "castorini/unicoil-noexp-msmarco-passage" \
     --data_name beir_msmarco \

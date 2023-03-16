@@ -1,5 +1,5 @@
-export SPARSE_RETRIEVAL_HOME=../../../../  # Path to the repo, please change it accordingly
-export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
+export SPRINT_HOME=../../../../  # Path to the repo, please change it accordingly
+export PYTHONPATH=$SPRINT_HOME:"${PYTHONPATH}"
 
 export stage=encode
 

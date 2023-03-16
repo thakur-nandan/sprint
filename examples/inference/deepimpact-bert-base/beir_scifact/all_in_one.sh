@@ -7,7 +7,7 @@ fi
 # Please make sure you have installed the repo
 # Set `original_score_range = -1` for automatic computing score range,
 # which is refered to https://github.com/DI4IR/SIGIR2021/blob/a6b1ee4efaba7d0de75501f2f05a4b9353cdb673/scripts/quantize.py#L27
-nohup python -m sparse_retrieval.inference.aio \
+nohup python -m sprint.inference.aio \
     --encoder_name deepimpact \
     --ckpt_name deepimpact-bert-base \
     --data_name beir/scifact \

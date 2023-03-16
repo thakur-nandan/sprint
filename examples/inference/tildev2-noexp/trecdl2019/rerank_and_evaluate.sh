@@ -15,11 +15,11 @@ fi
 
 # Note that TREC-DL 2019 is also based on the collection of MS MARCO
 # Note that we can use the test split from beir/msmarco
-python -m sparse_retrieval.inference.reformat_query \
+python -m sprint.inference.reformat_query \
     --original_format 'beir' \
     --data_dir datasets/beir/msmarco
 
-python -m sparse_retrieval.inference.rerank \
+python -m sprint.inference.rerank \
     --encoder_name tildev2 \
     --ckpt_name "ielab/TILDEv2-noExp" \
     --topics_path "datasets/beir/msmarco/queries-test.reformatted.tsv" \
@@ -31,7 +31,7 @@ python -m sparse_retrieval.inference.rerank \
     # --retrieval_result_path "datasets/tilde-trecdl2010-bm25_top1000/TILDEv2_rerank_BM25_top1000_dl2019.txt"
     # --retrieval_result_path "datasets/tilde-trecdl2010-bm25_top1000/bm25-top1000-dl2019-pass.txt"
 
-python -m sparse_retrieval.inference.evaluate \
+python -m sprint.inference.evaluate \
     --result_path "rerank/trec-format/run.tsv" \
     --format trec \
     --qrels_path "datasets/beir/msmarco/qrels/test.tsv" \

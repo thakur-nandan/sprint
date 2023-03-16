@@ -1,6 +1,6 @@
 from genericpath import exists
 import os
-from sparse_retrieval.inference import aio
+from sprint.inference import aio
 from beir.util import download_url
 
 def download_checkpoint():

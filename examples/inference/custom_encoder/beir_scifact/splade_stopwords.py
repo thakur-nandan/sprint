@@ -1,7 +1,7 @@
 from typing import Dict, List
 from nltk.corpus import stopwords
 from collections import defaultdict
-from sparse_retrieval.inference.methods import SpladeQueryEncoder, SpladeDocumentEncoder
+from sprint.inference.methods import SpladeQueryEncoder, SpladeDocumentEncoder
 
 stopwords = set(stopwords.words('english'))
 

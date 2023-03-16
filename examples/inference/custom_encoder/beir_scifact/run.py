@@ -1,5 +1,5 @@
-from sparse_retrieval.inference import aio
-from sparse_retrieval.inference.encoder_builders import register
+from sprint.inference import aio
+from sprint.inference.encoder_builders import register
 from splade_stopwords import splade_stopwords
 
 register('splade_stopwords', splade_stopwords)  # Register your custom encoders so that the repo knows it

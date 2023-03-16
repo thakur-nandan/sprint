@@ -1,6 +1,6 @@
 from beir import util, LoggingHandler
 from beir.datasets.data_loader import GenericDataLoader
-from sparse_retrieval.train import models
+from sprint.train import models
 
 from torch.cuda.amp import autocast
 import transformers

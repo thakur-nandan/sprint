@@ -6,12 +6,12 @@
 #   --batch 36 --threads 12 \
 #   --hits 1000 --bm25 --remove-query --fields contents=1.0 title=1.0
 
-python -m sparse_retrieval.inference.reformat_query \
+python -m sprint.inference.reformat_query \
     --original_format "beir" \
     --data_dir "/store2/scratch/n3thakur/beir-datasets/bioasq" \
     --topic_split "test"
 
-python -m sparse_retrieval.inference.rerank \
+python -m sprint.inference.rerank \
     --encoder_name tildev2 \
     --ckpt_name "ielab/TILDEv2-noExp" \
     --topics_path "/store2/scratch/n3thakur/beir-datasets/bioasq/queries-test.tsv" \
@@ -22,7 +22,7 @@ python -m sparse_retrieval.inference.rerank \
     --device 7 \
     --retrieval_result_path "run.beir-multifield.bioasq.txt"
 
-python -m sparse_retrieval.inference.evaluate \
+python -m sprint.inference.evaluate \
     --result_path "trec-format/run.tsv" \
     --format trec \
     --qrels_path "/store2/scratch/n3thakur/beir-datasets/bioasq/qrels/test.tsv" \

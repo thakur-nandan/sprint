@@ -5,7 +5,7 @@
 
 # Please make sure you have installed the repo
 
-python -m sparse_retrieval.inference.aio \
+python -m sprint.inference.aio \
     --encoder_name splade \
     --ckpt_name /home/n3thakur/projects/splade/weights/distilsplade_max \
     --data_name beir_arguana \

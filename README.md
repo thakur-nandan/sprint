@@ -49,7 +49,7 @@ This will go over the whole pipeline and give the final evaluation results in `b
 
 Or if you like running python directly, just run the code snippet below for evaluating `castorini/unicoil-noexp-msmarco-passage` on `BeIR/SciFact`:
 ```python
-from sparse_retrieval.inference import aio
+from sprint.inference import aio
 
 
 if __name__ == '__main__':  # aio.run can only be called within __main__
@@ -124,9 +124,9 @@ def custom_encoder_builder(ckpt_name, etype, device='cpu'):
     else:
         raise ValueError
 ```
-Then register `custom_encoder_builder` with `sparse_retrieval.inference.encoder_builders.register` before usage:
+Then register `custom_encoder_builder` with `sprint.inference.encoder_builders.register` before usage:
 ```python
-from sparse_retrieval.inference.encoder_builders import register
+from sprint.inference.encoder_builders import register
 
 register('custom_encoder_builder', custom_encoder_builder)
 ```

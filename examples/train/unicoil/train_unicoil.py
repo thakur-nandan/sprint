@@ -15,9 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from sparse_retrieval.train.trainer import SPARSETrainer
-from sparse_retrieval.train import models
-from sparse_retrieval.train.dataloaders import GroupedMarcoTrainDataset
+from sprint.train.trainer import SPARSETrainer
+from sprint.train import models
+from sprint.train.dataloaders import GroupedMarcoTrainDataset
 from arguments import ModelArguments, DataArguments, COILTrainingArguments as TrainingArguments
 from transformers import AutoConfig, AutoTokenizer
 from transformers import DataCollatorWithPadding

@@ -1,6 +1,6 @@
 # for dataset in nfcorpus
 # do
-#     python -m sparse_retrieval.inference.aio \
+#     python -m sprint.inference.aio \
 #         --encoder_name splade \
 #         --ckpt_name naver/efficient-splade-VI-BT-large-query naver/efficient-splade-VI-BT-large-doc \
 #         --data_name beir_${dataset} \
@@ -18,7 +18,7 @@ for dataset in msmarco
 do
     for split in dev
     do
-        # python -m sparse_retrieval.inference.aio \
+        # python -m sprint.inference.aio \
         #     --encoder_name splade \
         #     --ckpt_name /home/n3thakur/projects/splade/weights/distilsplade_max \
         #     --data_name beir_${dataset} \
@@ -31,7 +31,7 @@ do
         #     --original_query_format beir \
         #     --topic_split ${split}
 
-        python -m sparse_retrieval.inference.aio \
+        python -m sprint.inference.aio \
             --encoder_name splade \
             --ckpt_name naver/efficient-splade-VI-BT-large-query naver/efficient-splade-VI-BT-large-doc \
             --data_name beir_${dataset} \

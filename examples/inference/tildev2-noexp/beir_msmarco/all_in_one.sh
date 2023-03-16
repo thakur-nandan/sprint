@@ -1,7 +1,7 @@
 # Please make sure you have installed the repo
 
 # Notice that it should be MS MARCO dev split
-nohup python -m sparse_retrieval.inference.aio \
+nohup python -m sprint.inference.aio \
     --encoder_name tildev2 \
     --ckpt_name "ielab/TILDEv2-noExp" \
     --data_name beir_msmarco \
@@ -14,7 +14,7 @@ nohup python -m sparse_retrieval.inference.aio \
     --topic_split dev \
     > all_in_one.log &
 
-# python -m sparse_retrieval.inference.aio \
+# python -m sprint.inference.aio \
 #     --encoder_name tildev2 \
 #     --ckpt_name "ielab/TILDEv2-noExp" \
 #     --data_name beir_msmarco \

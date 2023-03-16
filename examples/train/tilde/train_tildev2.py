@@ -1,6 +1,6 @@
 from transformers import AutoConfig, AutoTokenizer, DataCollatorWithPadding, TrainingArguments, HfArgumentParser
-from sparse_retrieval.train import models, SPARSETrainer
-from sparse_retrieval.train.dataloaders import GroupedMarcoTrainDatasetTILDE
+from sprint.train import models, SPARSETrainer
+from sprint.train.dataloaders import GroupedMarcoTrainDatasetTILDE
 from torch import Tensor
 from dataclasses import dataclass, field
 from typing import Dict

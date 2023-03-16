@@ -1,5 +1,5 @@
-export SPARSE_RETRIEVAL_HOME=../../../../../  # Path to the repo, please change it accordingly
-export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
+export SPRINT_HOME=../../../../../  # Path to the repo, please change it accordingly
+export PYTHONPATH=$SPRINT_HOME:"${PYTHONPATH}"
 
 export stage=quantize  # Actually it is also OK to escape quantization (i.e. quantize the document term weights into integers)
 
@@ -21,7 +21,7 @@ export output_dir=$long_idenitifer_to/collection
 
 export log_name=$stage.$long_idenitifer_to.log
 
-nohup python -m sparse_retrieval.inference.$stage \
+nohup python -m sprint.inference.$stage \
     --collection_dir $collection_dir \
     --output_dir $output_dir \
     --method $quantization_method \

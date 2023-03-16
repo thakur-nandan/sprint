@@ -3,10 +3,10 @@ if [ ! -d "distilsplade_max" ]; then
     tar -xvf distilsplade_max.tar.gz
 fi
 
-export SPARSE_RETRIEVAL_HOME=../../../../  # Path to the repo, please change it accordingly
-export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
+export SPRINT_HOME=../../../../  # Path to the repo, please change it accordingly
+export PYTHONPATH=$SPRINT_HOME:"${PYTHONPATH}"
 
-nohup python -m sparse_retrieval.inference.aio \
+nohup python -m sprint.inference.aio \
     --encoder_name splade \
     --ckpt_name distilsplade_max \
     --data_name beir_nq \

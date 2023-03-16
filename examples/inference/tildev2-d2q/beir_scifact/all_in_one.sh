@@ -13,12 +13,12 @@ do
     #         --fields contents=1.0 title=1.0 \
     #         --remove-query --hits 101
     
-    # python -m sparse_retrieval.inference.reformat_query \
+    # python -m sprint.inference.reformat_query \
     # --original_format "beir" \
     # --data_dir "/store2/scratch/n3thakur/beir-datasets/${dataset}" \
     # --topic_split "test"
 
-    python -m sparse_retrieval.inference.rerank \
+    python -m sprint.inference.rerank \
         --encoder_name tildev2 \
         --ckpt_name "ielab/TILDEv2-TILDE200-exp" \
         --topics_path "/store2/scratch/n3thakur/beir-datasets/${dataset}/queries-test.tsv" \
@@ -29,7 +29,7 @@ do
         --device ${cudanum} \
         --retrieval_result_path "/store2/scratch/n3thakur/sparse-retrieval-results/tilde-bm25-multifield/${dataset}/runs/run.beir-v1.0.0-tilde-${dataset}-multifield.trec"
 
-    python -m sparse_retrieval.inference.evaluate \
+    python -m sprint.inference.evaluate \
         --result_path "/store2/scratch/n3thakur/sparse-retrieval-results/tilde-tilde-v2-top-1000/${dataset}/runs/run.tsv" \
         --format trec \
         --qrels_path "/store2/scratch/n3thakur/beir-datasets/${dataset}/qrels/test.tsv" \

@@ -12,7 +12,7 @@ do
     #     --output_path ${output_path} \
     #     --d2q_filepath ${d2q_filepath}
     
-    python -m sparse_retrieval.inference.aio \
+    python -m sprint.inference.aio \
         --encoder_name deepimpact \
         --ckpt_name ${model_name_or_path} \
         --data_name beir/${dataset} \

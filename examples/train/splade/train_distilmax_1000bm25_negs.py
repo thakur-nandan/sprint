@@ -2,8 +2,8 @@ from beir import util, LoggingHandler
 from beir.datasets.data_loader import GenericDataLoader
 from sentence_transformers import SentenceTransformer
 from torch.utils.data import DataLoader
-from sparse_retrieval.train.dataloaders import MSMARCODataset 
-from sparse_retrieval.train import models, losses
+from sprint.train.dataloaders import MSMARCODataset 
+from sprint.train import models, losses
 
 from datetime import datetime
 import logging

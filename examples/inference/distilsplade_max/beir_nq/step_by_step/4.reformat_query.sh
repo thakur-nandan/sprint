@@ -1,5 +1,5 @@
-export SPARSE_RETRIEVAL_HOME=../../../../../  # Path to the repo, please change it accordingly
-export PYTHONPATH=$SPARSE_RETRIEVAL_HOME:"${PYTHONPATH}"
+export SPRINT_HOME=../../../../../  # Path to the repo, please change it accordingly
+export PYTHONPATH=$SPRINT_HOME:"${PYTHONPATH}"
 
 export stage=reformat_query  # We need to transform the queries file from the BeIR format to the Pyserini format
 
@@ -12,7 +12,7 @@ export data_dir=datasets/beir/nq  # The results will be saved under the same pat
 export long_idenitifer=$data_name
 export log_name=$stage.$long_idenitifer.log
 
-nohup python -m sparse_retrieval.inference.$stage \
+nohup python -m sprint.inference.$stage \
     --original_format 'beir' \
     --data_dir $data_dir \
     > $log_name &

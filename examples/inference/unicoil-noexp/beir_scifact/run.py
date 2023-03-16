@@ -1,4 +1,4 @@
-from sparse_retrieval.inference import aio
+from sprint.inference import aio
 
 
 if __name__ == '__main__':  # aio.run can only be called within __main__

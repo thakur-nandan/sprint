@@ -1,4 +1,4 @@
-python -m sparse_retrieval.inference.aio \
+python -m sprint.inference.aio \
     --encoder_name splade \
     --ckpt_name naver/efficient-splade-VI-BT-large-query naver/efficient-splade-VI-BT-large-doc \
     --data_name beir_arguana \
