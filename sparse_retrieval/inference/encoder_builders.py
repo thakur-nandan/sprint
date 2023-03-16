@@ -2,10 +2,11 @@ from json import encoder
 from pydoc import Doc
 from telnetlib import DO
 from numpy import uint
-from pyserini.encode import SpladeQueryEncoder, QueryEncoder, DocumentEncoder
+from pyserini.encode import QueryEncoder, DocumentEncoder
 from typing import Callable, Union
 from .methods import (
     SpladeDocumentEncoder, 
+    SpladeQueryEncoder,
     SPARTAQueryEncoder, 
     SPARTADocumentEncoder, 
     TILDEv2QueryEncoder, 
