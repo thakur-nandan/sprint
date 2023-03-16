@@ -1,5 +1,8 @@
-# SPRINT
-Evaluate all state-of-the-art neural sparse-retrieval methods in one stop.
+<h1 align="center">
+<img style="vertical-align:middle" width="620" height="120" src="./images/sprint-logo.png" />
+</h1>
+
+A Unified Repository to evaluate diverse state-of-the-art neural sparse-retrieval methods in one-click.
 
 ## Dependency and installation
 This repo is backended by Pyserini, which relies on Java. To make all the things eaiser, we recommend to install all the dependencies via `conda`:
