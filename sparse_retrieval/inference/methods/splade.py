@@ -24,25 +24,31 @@ class SpladeQueryEncoder(QueryEncoder):
         input_attention = inputs['attention_mask']
         batch_logits = self.model(input_ids=input_ids, attention_mask=input_attention)['logits']
         token_weights = torch.log(1 + torch.relu(batch_logits)) * input_attention.unsqueeze(-1)
-        
-        if expansion:
-            batch_aggregated_logits, _ = torch.max(token_weights, dim=1)
-        else:
-            input_shape = input_ids.size()
-            token_embs = torch.zero(input_shape[0], input_shape[1], self.model.config.vocab_size,
-                                    device=input_ids.device)
-            token_embs = torch.scatter(token_embs, dim=-1, index=input_ids.unsqueese(-1), src=token_weights)
-            batch_aggregated_logits, _ = torch.max(token_embs, dim=1)
-
+        batch_aggregated_logits, _ = torch.max(token_weights, dim=1)
         batch_aggregated_logits = batch_aggregated_logits.cpu().detach().numpy()
-        return self._output_to_weight_dicts(batch_aggregated_logits)[0]
+
+        if expansion:
+            return self._output_to_weight_dicts(batch_aggregated_logits)[0]
+        else:
+            input_ids = input_ids.cpu().detach().numpy()
+            return self._output_to_weight_dicts_without_expansion(batch_aggregated_logits, input_ids)[0]
 
     def _output_to_weight_dicts(self, batch_aggregated_logits):
         to_return = []
         for aggregated_logits in batch_aggregated_logits:
             col = np.nonzero(aggregated_logits)[0]
             weights = aggregated_logits[col]
-            # d = {self.reverse_voc[k]: float(v) for k, v in zip(list(col), list(weights))}
+            d = {self.reverse_voc[k]: round(float(v) * 100) for k, v in zip(list(col), list(weights))}
+            to_return.append(d)
+        return to_return
+
+    def _output_to_weight_dicts_without_expansion(self, batch_aggregated_logits, input_ids):
+        to_return = []
+        for idx, aggregated_logits in enumerate(batch_aggregated_logits):
+            col = np.nonzero(aggregated_logits)[0]
+            col_orig = len(col)
+            col = col[np.in1d(col, input_ids[idx])]
+            weights = aggregated_logits[col]
             d = {self.reverse_voc[k]: round(float(v) * 100) for k, v in zip(list(col), list(weights))}
             to_return.append(d)
         return to_return
@@ -65,23 +71,30 @@ class SpladeDocumentEncoder(DocumentEncoder):
         input_attention = inputs['attention_mask']
         batch_logits = self.model(input_ids=input_ids, attention_mask=input_attention)['logits']
         token_weights = torch.log(1 + torch.relu(batch_logits)) * input_attention.unsqueeze(-1)
+        batch_aggregated_logits, _ = torch.max(token_weights, dim=1)
+        batch_aggregated_logits = batch_aggregated_logits.cpu().detach().numpy()
 
         if expansion:
-            batch_aggregated_logits, _ = torch.max(token_weights, dim=1)
+            return self._output_to_weight_dicts(batch_aggregated_logits)
         else:
-            input_shape = input_ids.size()
-            token_embs = torch.zero(input_shape[0], input_shape[1], self.model.config.vocab_size,
-                                    device=input_ids.device)
-            token_embs = torch.scatter(token_embs, dim=-1, index=input_ids.unsqueese(-1), src=token_weights)
-            batch_aggregated_logits, _ = torch.max(token_embs, dim=1)
-
-        batch_aggregated_logits = batch_aggregated_logits.cpu().detach().numpy()
-        return self._output_to_weight_dicts(batch_aggregated_logits)
+            input_ids = input_ids.cpu().detach().numpy()
+            return self._output_to_weight_dicts_without_expansion(batch_aggregated_logits, input_ids)
 
     def _output_to_weight_dicts(self, batch_aggregated_logits):
         to_return = []
         for aggregated_logits in batch_aggregated_logits:
             col = np.nonzero(aggregated_logits)[0]
+            weights = aggregated_logits[col]
+            d = {self.reverse_voc[k]: float(v) for k, v in zip(list(col), list(weights))}
+            to_return.append(d)
+        return to_return
+
+    def _output_to_weight_dicts_without_expansion(self, batch_aggregated_logits, input_ids):
+        to_return = []
+        for idx, aggregated_logits in enumerate(batch_aggregated_logits):
+            col = np.nonzero(aggregated_logits)[0]
+            col_orig = len(col)
+            col = col[np.in1d(col, input_ids[idx])]
             weights = aggregated_logits[col]
             d = {self.reverse_voc[k]: float(v) for k, v in zip(list(col), list(weights))}
             to_return.append(d)
