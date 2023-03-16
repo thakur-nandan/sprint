@@ -3,7 +3,6 @@ from beir import util
 import os
 import linecache
 import json
-import crash_ipdb
 
 class BeIRDataIterator(Dataset):
 
