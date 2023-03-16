@@ -6,11 +6,12 @@ import json
 
 class BeIRDataIterator(Dataset):
 
-    def __init__(self, data_dir):
+    def __init__(self, data_dir: str):
         self.data_dir = data_dir
         self.nexamples = len(linecache.getlines(data_dir))
+        self.sep = ' '
     
-    def __getitem__(self, index):
+    def __getitem__(self, index: int):
         if index >= self.nexamples:
             raise StopIteration
 
@@ -18,14 +19,14 @@ class BeIRDataIterator(Dataset):
         line_dict = json.loads(line)
         example = {}
         example['id'] = line_dict['_id']
-        example['text'] = ' '.join([line_dict['title'], line_dict['text']])
+        example['text'] = self.sep.join([line_dict['title'], line_dict['text']])
         return example
 
     def __len__(self):
         return self.nexamples
 
 
-def beir(dataset, data_dir=None):
+def beir(dataset: str, data_dir: str = None):
     if data_dir is None:
         assert dataset is not None
         url = f"https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/{dataset}.zip"
@@ -37,7 +38,7 @@ def beir(dataset, data_dir=None):
     return BeIRDataIterator(os.path.join(data_dir, 'corpus.jsonl'))
 
 
-def build(data_name, data_dir):
+def build(data_name: str, data_dir: str):
     data_name = data_name.lower()
     
     if 'beir' in data_name:
@@ -46,12 +47,3 @@ def build(data_name, data_dir):
         return beir(data_name, data_dir)
     else:
         raise NotImplementedError
-
-
-if __name__ == '__main__':
-    data_iter = build('beir/scifact', None)
-    print(len(data_iter))
-    for i, example in enumerate(data_iter):
-        if i > 3:
-            break
-        print(example)
