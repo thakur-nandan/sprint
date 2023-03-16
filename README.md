@@ -131,11 +131,11 @@ from sparse_retrieval.inference.encoder_builders import register
 register('custom_encoder_builder', custom_encoder_builder)
 ```
 
-## Training
+## Training (Experimental)
 Will be added.
 
 ## Contacts
 The main contributors of this repository are:
 
-- [Nandan Thakur](https://github.com/Nthakur20) (for training)
-- [Kexin Wang](https://github.com/kwang2049) (for inference)
+- [Nandan Thakur](https://github.com/Nthakur20)
+- [Kexin Wang](https://github.com/kwang2049)
