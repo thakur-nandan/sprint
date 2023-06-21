@@ -1,29 +1,37 @@
-# This script shows how to evaluate BT-SPLADE-L model on SciFact dataset.
-# The BT-SPLADE-L model contains two encoders: one for queries and one for documents.
-# The query encoder is a Tiny BERT model, and the document encoder is a DistilBERT model. 
-# BT-SPLADE-L query encoder: https://huggingface.co/naver/efficient-splade-VI-BT-large-query
-# BT-SPLADE-L document encoder: https://huggingface.co/naver/efficient-splade-VI-BT-large-doc
-# For more details, refer to (Lassance et. al. 2022): https://dl.acm.org/doi/10.1145/3477495.3531833
+"""
+This script shows how to evaluate BT-SPLADE-L model on SciFact dataset.
+The BT-SPLADE-L model contains two encoders: one for queries and one for documents.
+The query encoder is a Tiny BERT model, and the document encoder is a DistilBERT model. 
+BT-SPLADE-L query encoder: https://huggingface.co/naver/efficient-splade-VI-BT-large-query
+BT-SPLADE-L document encoder: https://huggingface.co/naver/efficient-splade-VI-BT-large-doc
+For more details, refer to (Lassance et. al. 2022): https://dl.acm.org/doi/10.1145/3477495.3531833
 
-# Parameters:
-# You can add multiple GPUs in the `--gpus` parameter for faster inference. 
-# Add `beir_` before the dataset name in `--data_name` parameter. 
-# Dataset will get downloaded in your current path (\datasets) if not present.
-# Add model checkpoints (query, document) in `--ckpt_name` parameter.
-# Add `--do_quantization` parameter to enable quantization.
-# Add `--quantization_method` parameter to specify ndigits-round and `--ndigits` = 2 for rounding off by x100.
+Parameters:
+You can add multiple GPUs in the `--gpus` parameter for faster inference. 
+Add `beir_` before the dataset name in `--data_name` parameter. 
+Dataset will get downloaded in your current path (\datasets) if not present.
+Add model checkpoints (query, document) in `--ckpt_name` parameter.
+Add `--do_quantization` parameter to enable quantization.
+Add `--quantization_method` parameter to specify ndigits-round and `--ndigits` = 2 for rounding off by x100.
+"""
 
-python -m sprint_toolkit.inference.aio \
-    --encoder_name splade \
-    --ckpt_name naver/efficient-splade-VI-BT-large-query naver/efficient-splade-VI-BT-large-doc \
-    --data_name beir_scifact \
-    --gpus 0 \
-    --output_dir beir_scifact-bt-splade-l \
-    --do_quantization \
-    --quantization_method ndigits-round \
-    --ndigits 2 \
-    --original_query_format beir \
-    --topic_split test
+from sprint_toolkit.inference import aio
+
+
+if __name__ == '__main__':  # aio.run can only be called within __main__
+
+    aio.run(
+        encoder_name='splade',
+        ckpt_name=['naver/efficient-splade-VI-BT-large-query', 'naver/efficient-splade-VI-BT-large-doc'],
+        data_name='beir/scifact',
+        gpus=[0],
+        output_dir='beir_scifact-bt-splade-l',
+        do_quantization=True,
+        quantization_method='ndigits-round',
+        ndigits=2,
+        original_query_format='beir',
+        topic_split='test'
+    )
 
 # You should get the following results on SCIFACT dataset with BT-SPLADE-L model:
 # {
