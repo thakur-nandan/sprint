@@ -8,6 +8,7 @@ examples/**/evaluation/
 examples/**/index/
 examples/**/trec-format/
 examples/**/cache/
+examples/**/*.log
 examples/**/preprocessed/
 
 runs/
