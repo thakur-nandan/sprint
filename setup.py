@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="sprint-toolkit",
-    version="0.0.1",
+    version="0.0.3",
     author="Nandan Thakur",
     author_email="nandant@gmail.com",
     description="SPRINT: A Unified Toolkit for Evaluating and Demystifying Zero-shot Neural Sparse Retrieval",

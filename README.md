@@ -29,9 +29,9 @@
     <a href="https://www.tu-darmstadt.de/"><img style="float: right; padding: 2px 7px 2px 7px;" width="167.7" height="60" src="./images/tu-darmstadt.png" /></a>
 </h3>
 
-### SPRINT provides a _Unified_ Repository to easily _evaluate_ diverse state-of-the-art neural (BERT-based) sparse-retrieval models.
+### SPRINT provides a _unified_ repository to easily _evaluate_ diverse state-of-the-art neural (BERT-based) sparse-retrieval models.
 
-SPRINT toolkit allows you to zero-shot easily and fairly evaluate any neural sparse retriever easily across datasets in the BEIR benchmark (or your own dataset). The toolkit is built around as a useful wrapper around Pyserini. The toolkit provides evaluation of seven diverse (neural) sparse retrieval models: [SPLADEv2](https://arxiv.org/abs/2109.10086), [BT-SPLADE-L](https://arxiv.org/abs/2207.03834), [uniCOIL](https://arxiv.org/abs/2106.14807), [TILDEv2](https://arxiv.org/abs/2108.08513), [DeepImpact](https://arxiv.org/abs/2104.12016), [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf) and [SPARTA](https://aclanthology.org/2021.naacl-main.47/).
+SPRINT toolkit allows you to easily search or evaluate any neural sparse retriever across **any** dataset in the BEIR benchmark (or your own dataset). The toolkit is built around as a useful wrapper around Pyserini. The toolkit provides evaluation of seven diverse (neural) sparse retrieval models: [SPLADEv2](https://arxiv.org/abs/2109.10086), [BT-SPLADE-L](https://arxiv.org/abs/2207.03834), [uniCOIL](https://arxiv.org/abs/2106.14807), [TILDEv2](https://arxiv.org/abs/2108.08513), [DeepImpact](https://arxiv.org/abs/2104.12016), [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf) and [SPARTA](https://aclanthology.org/2021.naacl-main.47/).
 
 
 
