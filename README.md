@@ -24,9 +24,9 @@
 </p>
 
 <h3 align="center">
-    <a href="https://uwaterloo.ca"><img style="float: right; padding: 2px 7px 2px 7px;" width="160" height="50" src="./images/uwaterloo.png" /></a>
-    <a href="http://www.ukp.tu-darmstadt.de"><img style="float: left; padding: 2px 7px 2px 7px;" width="110" height="50" src="./images/ukp.png" /></a>
-    <a href="https://www.tu-darmstadt.de/"><img style="float: middle; padding: 2px 7px 2px 7px;" width="125" height="45" src="./images/tu-darmstadt.png" /></a>
+    <a href="https://uwaterloo.ca"><img style="float: right; padding: 2px 7px 2px 7px;" width="213" height="67" src="./images/uwaterloo.png" /></a>
+    <a href="http://www.ukp.tu-darmstadt.de"><img style="float: left; padding: 2px 7px 2px 7px;" width="147" height="67" src="./images/ukp.png" /></a>
+    <a href="https://www.tu-darmstadt.de/"><img style="float: middle; padding: 2px 7px 2px 7px;" width="167.7" height="60" src="./images/tu-darmstadt.png" /></a>
 </h3>
 
 ### SPRINT provides a _Unified_ Repository to easily _evaluate_ diverse state-of-the-art neural (BERT-based) sparse-retrieval models.
