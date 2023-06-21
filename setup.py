@@ -5,11 +5,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
     readme = fh.read()
 
 setup(
-    name="sprint",
+    name="sprint-toolkit",
     version="0.0.1",
     author="Nandan Thakur",
     author_email="nandant@gmail.com",
-    description="SPRINT: Sparse Retrieval Neural Toolkit",
+    description="SPRINT: A Unified Toolkit for Evaluating and Demystifying Zero-shot Neural Sparse Retrieval",
     long_description=readme,
     long_description_content_type="text/markdown",
     url="https://github.com/thakur-nandan/sprint",
@@ -18,14 +18,13 @@ setup(
     },
     packages=find_packages(),
     classifiers=[
-        "Development Status :: 1 - Beta",
         "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Intended Audience :: Science/Research",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.7",
     install_requires=[
         "beir",
         "pyserini"
