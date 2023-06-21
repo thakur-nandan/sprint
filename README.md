@@ -23,23 +23,24 @@
     </a>
 </p>
 
+<h3 align="center">
+    <a href="https://uwaterloo.ca"><img style="float: right; padding: 2px 7px 2px 7px;" width="160" height="50" src="./images/uwaterloo.png" /></a>
+    <a href="http://www.ukp.tu-darmstadt.de"><img style="float: left; padding: 2px 7px 2px 7px;" width="110" height="50" src="./images/ukp.png" /></a>
+    <a href="https://www.tu-darmstadt.de/"><img style="float: middle; padding: 2px 7px 2px 7px;" width="125" height="45" src="./images/tu-darmstadt.png" /></a>
+</h3>
+
 ### SPRINT provides a _Unified_ Repository to easily _evaluate_ diverse state-of-the-art neural (BERT-based) sparse-retrieval models.
 
-SPRINT toolkit allows you to zero-shot easily and fairly evaluate any neural sparse retriever easily across datasets in the BEIR benchmark (or your own dataset). The toolkit is built around as a useful wrapper around Pyserini. The toolkit provides evaluation of six diverse (neural) sparse retrieval models:
+SPRINT toolkit allows you to zero-shot easily and fairly evaluate any neural sparse retriever easily across datasets in the BEIR benchmark (or your own dataset). The toolkit is built around as a useful wrapper around Pyserini. The toolkit provides evaluation of seven diverse (neural) sparse retrieval models: [SPLADEv2](https://arxiv.org/abs/2109.10086), [BT-SPLADE-L](https://arxiv.org/abs/2207.03834), [uniCOIL](https://arxiv.org/abs/2106.14807), [TILDEv2](https://arxiv.org/abs/2108.08513), [DeepImpact](https://arxiv.org/abs/2104.12016), [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf) and [SPARTA](https://aclanthology.org/2021.naacl-main.47/).
 
-* [SPLADEv2](https://arxiv.org/abs/2109.10086) 
-* [BT-SPLADE-L](https://arxiv.org/abs/2207.03834) 
-* [uniCOIL](https://arxiv.org/abs/2106.14807)
-* [TILDEv2](https://arxiv.org/abs/2108.08513) 
-* [DeepImpact](https://arxiv.org/abs/2104.12016)
-* [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf)
-* [SPARTA](https://aclanthology.org/2021.naacl-main.47/)
+
+
 
 If you want to read more about the SPRINT toolkit, or wish to know which model to use, please refer to our paper for more details:
 
-* [**SPRINT: A Unified Toolkit for Evaluating and Demystifying Zero-shot Neural Sparse Retrieval**]() (SIGIR'23 Resource Track)
+* [**SPRINT: A Unified Toolkit for Evaluating and Demystifying Zero-shot Neural Sparse Retrieval**]() (Accepted at SIGIR'23 Resource Track)
 
-## :shoe: Getting Started
+## :runner: Getting Started
 SPRINT is backed by Pyserini which relies on Java. To make the installation eaiser, we recommend to follow the steps below via `conda`:
 
 ```bash
@@ -54,7 +55,7 @@ $ conda install -c conda-forge openjdk=11
 $ pip install sprint-toolkit
 ```
 
-## :shoe: Quickstart with SPRINT Toolkit
+## :runner: Quickstart with SPRINT Toolkit
 
 ### Quick start
 For a quick start, we can go to the [example](examples/inference/distilsplade_max/beir_scifact/all_in_one.sh) for evaluating SPLADE (`distilsplade_max`) on the BeIR/SciFact dataset:
