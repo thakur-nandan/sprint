@@ -2,22 +2,60 @@
 <img style="vertical-align:middle" width="620" height="120" src="./images/sprint-logo.png" />
 </h1>
 
-A Unified Repository to evaluate diverse state-of-the-art neural sparse-retrieval methods in one-click.
+<p align="center">
+    <a href="https://github.com/thakur-nandan/sprint/releases">
+        <img alt="GitHub release" src="https://img.shields.io/badge/release-v0.0.1-blue">
+    </a>
+    <a href="https://www.python.org/">
+            <img alt="Build" src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?color=purple">
+    </a>
+    <a href="https://github.com/thakur-nandan/sprint/blob/master/LICENSE">
+        <img alt="License" src="https://img.shields.io/github/license/thakur-nandan/sprint.svg?color=green">
+    </a>
+    <!-- <a href="https://colab.research.google.com/drive/1HfutiEhHMJLXiWGT8pcipxT5L2TpYEdt?usp=sharing">
+        <img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg">
+    </a> -->
+    <a href="https://pepy.tech/project/sprint-toolkit">
+        <img alt="Downloads" src="https://static.pepy.tech/personalized-badge/sprint?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads">
+    </a>
+    <a href="https://github.com/thakur-nandan/sprint/">
+        <img alt="Downloads" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
+    </a>
+</p>
 
-## Dependency and installation
-This repo is backended by Pyserini, which relies on Java. To make all the things eaiser, we recommend to install all the dependencies via `conda`:
+### SPRINT provides a _Unified_ Repository to easily _evaluate_ diverse state-of-the-art neural (BERT-based) sparse-retrieval models.
+
+SPRINT toolkit allows you to zero-shot easily and fairly evaluate any neural sparse retriever easily across datasets in the BEIR benchmark (or your own dataset). The toolkit is built around as a useful wrapper around Pyserini. The toolkit provides evaluation of six diverse (neural) sparse retrieval models:
+
+* [SPLADEv2](https://arxiv.org/abs/2109.10086) 
+* [BT-SPLADE-L](https://arxiv.org/abs/2207.03834) 
+* [uniCOIL](https://arxiv.org/abs/2106.14807)
+* [TILDEv2](https://arxiv.org/abs/2108.08513) 
+* [DeepImpact](https://arxiv.org/abs/2104.12016)
+* [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf)
+* [SPARTA](https://aclanthology.org/2021.naacl-main.47/)
+
+If you want to read more about the SPRINT toolkit, or wish to know which model to use, please refer to our paper for more details:
+
+* [**SPRINT: A Unified Toolkit for Evaluating and Demystifying Zero-shot Neural Sparse Retrieval**]() (SIGIR'23 Resource Track)
+
+## :shoe: Getting Started
+SPRINT is backed by Pyserini which relies on Java. To make the installation eaiser, we recommend to follow the steps below via `conda`:
+
 ```bash
-conda env create -f environment.yml  # The Java/JDK dependency will also be installed by running this
-```
-This will create a conda environment named `sparse-retrieval`. So if you want other names, please change the `name` argument in [environment.yml](environment.yml).
+#### Create a new conda environment using conda ####
+$ conda create -n sprint_env python=3.8
+$ conda activate sprint_env
 
-To install this repo, just go into the repo and do:  (This is required to run the examples)
-```
-pip install -e .
+# Install JDK 11 via conda
+$ conda install -c conda-forge openjdk=11
+
+# Install SPRINT toolkit using PyPI
+$ pip install sprint-toolkit
 ```
 
+## :shoe: Quickstart with SPRINT Toolkit
 
-## Inference
 ### Quick start
 For a quick start, we can go to the [example](examples/inference/distilsplade_max/beir_scifact/all_in_one.sh) for evaluating SPLADE (`distilsplade_max`) on the BeIR/SciFact dataset:
 ```bash
