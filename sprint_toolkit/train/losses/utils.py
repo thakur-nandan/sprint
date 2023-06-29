@@ -1,11 +1,12 @@
 import torch
 from torch import Tensor
 
+
 def pairwise_dot_score(a: Tensor, b: Tensor):
     """
-   Computes the pairwise dot-product dot_prod(a[i], b[i])
-   :return: Vector with res[i] = dot_prod(a[i], b[i])
-   """
+    Computes the pairwise dot-product dot_prod(a[i], b[i])
+    :return: Vector with res[i] = dot_prod(a[i], b[i])
+    """
     if not isinstance(a, torch.Tensor):
         a = torch.tensor(a)
 
@@ -13,6 +14,7 @@ def pairwise_dot_score(a: Tensor, b: Tensor):
         b = torch.tensor(b)
 
     return (a * b).sum(dim=-1)
+
 
 def dot_score(a: Tensor, b: Tensor):
     """

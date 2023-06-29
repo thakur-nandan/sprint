@@ -17,16 +17,23 @@
 from typing import Optional
 
 import torch
+
 if torch.cuda.is_available():
     from torch.cuda.amp import autocast
-from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel, PretrainedConfig
+from transformers import (
+    AutoConfig,
+    AutoModel,
+    AutoTokenizer,
+    PreTrainedModel,
+    PretrainedConfig,
+)
 
 from pyserini.encode import DocumentEncoder, QueryEncoder
 
 
 class UniCoilEncoder(PreTrainedModel):
     config_class = AutoConfig
-    base_model_prefix = 'coil_encoder'
+    base_model_prefix = "coil_encoder"
     load_tf_weights = None
 
     def __init__(self, config: PretrainedConfig, *model_args, **model_kwargs):
@@ -38,7 +45,7 @@ class UniCoilEncoder(PreTrainedModel):
 
     # Copied from transformers.models.bert.modeling_bert.BertPreTrainedModel._init_weights
     def _init_weights(self, module):
-        """ Initialize the weights """
+        """Initialize the weights"""
         if isinstance(module, (torch.nn.Linear, torch.nn.Embedding)):
             # Slightly different from the TF version which uses truncated_normal for initialization
             # cf https://github.com/pytorch/pytorch/pull/5617
@@ -54,9 +61,9 @@ class UniCoilEncoder(PreTrainedModel):
         self.tok_proj.apply(self._init_weights)
 
     def forward(
-            self,
-            input_ids: torch.Tensor,
-            attention_mask: Optional[torch.Tensor] = None,
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: Optional[torch.Tensor] = None,
     ):
         input_shape = input_ids.size()
         device = input_ids.device
@@ -74,7 +81,7 @@ class UniCoilEncoder(PreTrainedModel):
 
 
 class UniCoilDocumentEncoder(DocumentEncoder):
-    def __init__(self, model_name, tokenizer_name=None, device='cuda:0'):
+    def __init__(self, model_name, tokenizer_name=None, device="cuda:0"):
         self.device = device
         self.model = UniCoilEncoder.from_pretrained(model_name)
         self.model.to(self.device)
@@ -82,14 +89,19 @@ class UniCoilDocumentEncoder(DocumentEncoder):
 
     def encode(self, texts, titles=None, expands=None, fp16=False):
         if titles:
-            texts = [f'{title} {text}' for title, text in zip(titles, texts)]
+            texts = [f"{title} {text}" for title, text in zip(titles, texts)]
         max_length = 512  # hardcode for now
         if expands:
             input_ids = self._tokenize_with_injects(texts, expands)
         else:
-            input_ids = self.tokenizer(texts, max_length=max_length, padding='longest',
-                                       truncation=True, add_special_tokens=True,
-                                       return_tensors='pt').to(self.device)["input_ids"]
+            input_ids = self.tokenizer(
+                texts,
+                max_length=max_length,
+                padding="longest",
+                truncation=True,
+                add_special_tokens=True,
+                return_tensors="pt",
+            ).to(self.device)["input_ids"]
         if fp16:
             with autocast():
                 with torch.no_grad():
@@ -108,9 +120,9 @@ class UniCoilDocumentEncoder(DocumentEncoder):
             for j in range(len(tokens)):
                 tok = str(tokens[j])
                 weight = float(weights[j])
-                if tok == '[CLS]':
+                if tok == "[CLS]":
                     continue
-                if tok == '[PAD]':
+                if tok == "[PAD]":
                     break
                 if tok not in tok_weights:
                     tok_weights[tok] = weight
@@ -123,13 +135,19 @@ class UniCoilDocumentEncoder(DocumentEncoder):
         tokenized = []
         max_len = 0
         for text, expand in zip(texts, expands):
-            text_ids = self.tokenizer.encode(text, add_special_tokens=False, max_length=400, truncation=True)
-            expand_ids = self.tokenizer.encode(expand, add_special_tokens=False, max_length=100, truncation=True)
+            text_ids = self.tokenizer.encode(
+                text, add_special_tokens=False, max_length=400, truncation=True
+            )
+            expand_ids = self.tokenizer.encode(
+                expand, add_special_tokens=False, max_length=100, truncation=True
+            )
             injects = set()
             for tok_id in expand_ids:
                 if tok_id not in text_ids:
                     injects.add(tok_id)
-            all_tok_ids = [101] + text_ids + [102] + list(injects) + [102]  # 101: CLS, 102: SEP
+            all_tok_ids = (
+                [101] + text_ids + [102] + list(injects) + [102]
+            )  # 101: CLS, 102: SEP
             tokenized.append(all_tok_ids)
             cur_len = len(all_tok_ids)
             if cur_len > max_len:
@@ -140,17 +158,24 @@ class UniCoilDocumentEncoder(DocumentEncoder):
 
 
 class UniCoilQueryEncoder(QueryEncoder):
-    def __init__(self, model_name_or_path, tokenizer_name=None, device='cpu'):
+    def __init__(self, model_name_or_path, tokenizer_name=None, device="cpu"):
         self.device = device
         self.model = UniCoilEncoder.from_pretrained(model_name_or_path)
         self.model.to(self.device)
-        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name or model_name_or_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            tokenizer_name or model_name_or_path
+        )
 
     def encode(self, text, **kwargs):
         max_length = 128  # hardcode for now
-        input_ids = self.tokenizer([text], max_length=max_length, padding='longest',
-                                   truncation=True, add_special_tokens=True,
-                                   return_tensors='pt').to(self.device)["input_ids"]
+        input_ids = self.tokenizer(
+            [text],
+            max_length=max_length,
+            padding="longest",
+            truncation=True,
+            add_special_tokens=True,
+            return_tensors="pt",
+        ).to(self.device)["input_ids"]
         batch_weights = self.model(input_ids).cpu().detach().numpy()
         batch_token_ids = input_ids.cpu().detach().numpy()
         return self._output_to_weight_dicts(batch_token_ids, batch_weights)[0]
@@ -164,9 +189,9 @@ class UniCoilQueryEncoder(QueryEncoder):
             for j in range(len(tokens)):
                 tok = str(tokens[j])
                 weight = float(weights[j])
-                if tok == '[CLS]':
+                if tok == "[CLS]":
                     continue
-                if tok == '[PAD]':
+                if tok == "[PAD]":
                     break
                 if tok not in tok_weights:
                     tok_weights[tok] = weight

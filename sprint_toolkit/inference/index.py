@@ -30,31 +30,31 @@ def run(
     generator: str,
     impact: bool,
     pretokenized: bool,
-    threads: int
+    threads: int,
 ):
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
-    assert os.path.isdir(input), ValueError('Argument -input should be a directory.')
+    assert os.path.isdir(input), ValueError("Argument -input should be a directory.")
     args_strings = []
     for arg in args:
         value = values[arg]
-        args_strings.append(f'-{arg}')
+        args_strings.append(f"-{arg}")
         if type(value) is not bool:
             args_strings.append(str(value))
-    
-    JIndexCollection = autoclass('io.anserini.index.IndexCollection')
-    JIndexCollection.main(args_strings)
-    print(f'{__name__}: Done')
-    
 
-if __name__ == '__main__':
+    JIndexCollection = autoclass("io.anserini.index.IndexCollection")
+    JIndexCollection.main(args_strings)
+    print(f"{__name__}: Done")
+
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--collection', '-collection')
-    parser.add_argument('--input', '-input')
-    parser.add_argument('--index', '-index')
-    parser.add_argument('--generator', '-generator')
-    parser.add_argument('--impact', '-impact', action='store_true')
-    parser.add_argument('--pretokenized', '-pretokenized', action='store_true')
-    parser.add_argument('--threads', '-threads')
+    parser.add_argument("--collection", "-collection")
+    parser.add_argument("--input", "-input")
+    parser.add_argument("--index", "-index")
+    parser.add_argument("--generator", "-generator")
+    parser.add_argument("--impact", "-impact", action="store_true")
+    parser.add_argument("--pretokenized", "-pretokenized", action="store_true")
+    parser.add_argument("--threads", "-threads")
     args = parser.parse_args()
     run(**vars(args))
