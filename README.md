@@ -33,13 +33,13 @@
 
 SPRINT toolkit allows you to easily search or evaluate any neural sparse retriever across **any** dataset in the BEIR benchmark (or your own dataset). The toolkit provides evaluation of seven diverse (neural) sparse retrieval models: [SPLADEv2](https://arxiv.org/abs/2109.10086), [BT-SPLADE-L](https://arxiv.org/abs/2207.03834), [uniCOIL](https://arxiv.org/abs/2106.14807), [TILDEv2](https://arxiv.org/abs/2108.08513), [DeepImpact](https://arxiv.org/abs/2104.12016), [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf) and [SPARTA](https://aclanthology.org/2021.naacl-main.47/).
 
-SPRINT Toolkit is built around as a useful wrapper around Pyserini. It performs inference a five-step sequential pipeline unifying all sparse retrieval evaluation. The process is easy to follow through and illustrated in the figure below:
+SPRINT Toolkit is built around as a useful wrapper around Pyserini. It performs inference a five-step sequential pipeline unifying all sparse retrieval evaluation. The process is illustrated in the figure below:
 
 <h3 align="center">
    <img style="vertical-align:middle" width="620" height="336" src="./images/sprint-pipeline.png" />
 </h3>
 
-If you want to read more about the SPRINT toolkit, or wish to know which model to use, please refer to our paper for more details:
+If you want to learn and read more about the SPRINT toolkit, please refer to our paper for more details:
 
 * [**SPRINT: A Unified Toolkit for Evaluating and Demystifying Zero-shot Neural Sparse Retrieval**]() (Accepted at SIGIR'23 Resource Track)
 
