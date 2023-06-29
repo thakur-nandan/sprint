@@ -16,7 +16,7 @@
         <img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg">
     </a> -->
     <a href="https://pepy.tech/project/sprint-toolkit">
-        <img alt="Downloads" src="https://static.pepy.tech/personalized-badge/sprint?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads">
+        <img alt="Downloads" src="https://static.pepy.tech/personalized-badge/sprint-toolkit?period=month&units=international_system&left_color=black&right_color=orange&left_text=Downloads">
     </a>
     <a href="https://github.com/thakur-nandan/sprint/">
         <img alt="Downloads" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
@@ -31,10 +31,13 @@
 
 ### SPRINT provides a _unified_ repository to easily _evaluate_ diverse state-of-the-art neural (BERT-based) sparse-retrieval models.
 
-SPRINT toolkit allows you to easily search or evaluate any neural sparse retriever across **any** dataset in the BEIR benchmark (or your own dataset). The toolkit is built around as a useful wrapper around Pyserini. The toolkit provides evaluation of seven diverse (neural) sparse retrieval models: [SPLADEv2](https://arxiv.org/abs/2109.10086), [BT-SPLADE-L](https://arxiv.org/abs/2207.03834), [uniCOIL](https://arxiv.org/abs/2106.14807), [TILDEv2](https://arxiv.org/abs/2108.08513), [DeepImpact](https://arxiv.org/abs/2104.12016), [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf) and [SPARTA](https://aclanthology.org/2021.naacl-main.47/).
+SPRINT toolkit allows you to easily search or evaluate any neural sparse retriever across **any** dataset in the BEIR benchmark (or your own dataset). The toolkit provides evaluation of seven diverse (neural) sparse retrieval models: [SPLADEv2](https://arxiv.org/abs/2109.10086), [BT-SPLADE-L](https://arxiv.org/abs/2207.03834), [uniCOIL](https://arxiv.org/abs/2106.14807), [TILDEv2](https://arxiv.org/abs/2108.08513), [DeepImpact](https://arxiv.org/abs/2104.12016), [DocT5query](https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf) and [SPARTA](https://aclanthology.org/2021.naacl-main.47/).
 
+SPRINT Toolkit is built around as a useful wrapper around Pyserini. It performs inference a five-step sequential pipeline unifying all sparse retrieval evaluation. The process is easy to follow through and illustrated in the figure below:
 
-
+<h3 align="center">
+   <img style="vertical-align:middle" width="620" height="336" src="./images/sprint-pipeline.png" />
+</h3>
 
 If you want to read more about the SPRINT toolkit, or wish to know which model to use, please refer to our paper for more details:
 
