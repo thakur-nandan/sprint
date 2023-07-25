@@ -1,15 +1,29 @@
+# This script shows how to evaluate SPLADEv2 model on SciFact dataset.
+# The SPLADEv2 model contains one encoder for both queries and documents.
+# The query and document encoder is a DistilBERT model. 
+# SPLADEv2: https://huggingface.co/naver/splade_v2_distil
+# For more details, refer to (Formal et. al. 2021): https://arxiv.org/abs/2109.10086
+
+# Parameters:
+# You can add multiple GPUs in the `--gpus` parameter for faster inference. 
+# Add `beir_` before the dataset name in `--data_name` parameter. 
+# Dataset will get downloaded in your current path (\datasets) if not present.
+# Add model checkpoints (query, document) in `--ckpt_name` parameter.
+# Add `--do_quantization` parameter to enable quantization.
+# Add `--quantization_method` parameter to specify ndigits-round and `--ndigits` = 2 for rounding off by x100.
+
+
 python -m sprint_toolkit.inference.aio \
     --encoder_name splade \
     --ckpt_name naver/splade_v2_distil \
-    --data_name beir_nfcorpus \
+    --data_name beir_scifact \
     --gpus 0 \
-    --output_dir beir_nfcorpus-distilsplade_max \
+    --output_dir beir_scifact-distilsplade_max \
     --do_quantization \
     --quantization_method ndigits-round \
     --ndigits 2 \
     --original_query_format beir \
     --topic_split test
-
 
 # {
 #     "nDCG": {
