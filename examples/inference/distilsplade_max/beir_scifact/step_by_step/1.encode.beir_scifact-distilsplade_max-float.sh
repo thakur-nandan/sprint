@@ -8,7 +8,7 @@ export encoder_ckpt_name='distilsplade_max'  # Here we use noexp model (i.e. no 
 export data_name='beir_scifact'  # beir data can be downloaded automatically
 export quantization=float  # The current encoding stage will output the original float weights without quantization
 
-export ckpt_name=distilsplade_max  # A local path downloaded from running 0.download-distilsplade_max.sh
+export ckpt_name='naver/splade_v2_distil'  # A local path downloaded from running 0.download-distilsplade_max.sh
 export long_idenitifer=$data_name-$encoder_ckpt_name-$quantization
 
 export output_dir=$long_idenitifer/collection

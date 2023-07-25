@@ -1,7 +1,4 @@
 from json import encoder
-from pydoc import Doc
-from telnetlib import DO
-from numpy import uint
 from pyserini.encode import QueryEncoder, DocumentEncoder
 from typing import Callable, Union
 from .methods import (
@@ -29,10 +26,6 @@ def unicoil(ckpt_name, etype, device="cpu") -> Union[QueryEncoder, DocumentEncod
 
 
 def splade(ckpt_name, etype, device="cpu"):
-    print(
-        "WARNING: Since the online checkpoints are only avaible at https://github.com/naver/splade/raw/main/weights/splade_max,"
-        "please download them and use a local path for `ckpt_name`"
-    )
     if etype == "query":
         return SpladeQueryEncoder(ckpt_name, device=device)
     elif etype == "document":

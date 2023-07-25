@@ -1,17 +1,9 @@
-# if [ ! -d "distilsplade_max" ]; then
-#     wget https://download-de.europe.naverlabs.com/Splade_Release_Jan22/distilsplade_max.tar.gz
-#     tar -xvf distilsplade_max.tar.gz
-# fi
-
-# Please make sure you have installed the repo
-
-python -m sprint.inference.aio \
+python -m sprint_toolkit.inference.aio \
     --encoder_name splade \
-    --ckpt_name /home/n3thakur/projects/splade/weights/distilsplade_max \
-    --data_name beir_arguana \
-    --data_dir /store2/scratch/n3thakur/beir-datasets/arguana \
-    --gpus 2 \
-    --output_dir beir_arguana-distilsplade_max \
+    --ckpt_name naver/splade_v2_distil \
+    --data_name beir_nfcorpus \
+    --gpus 0 \
+    --output_dir beir_nfcorpus-distilsplade_max \
     --do_quantization \
     --quantization_method ndigits-round \
     --ndigits 2 \
